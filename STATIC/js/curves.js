@@ -7,13 +7,13 @@
   //var dropDownMenu = d3.select("#siteSelection")
   //var dataset = dropDownMenu.property("value");
 
-  //function to create dropdown with well name options
+//FUNCTION TO CREATE DROP DOWN VALUES
   function createDropdownOptions() {
     //select dropdown <select> in well.html with id:"siteSelection"
     var selector = d3.select("#siteSelection");
     //read in the wellNames.json file, which contains the array "names" with all the well names
     d3.json('/DATA/wellNames.json').then((data) => {
-      console.log(data);
+      // console.log(data);
     var wellOptions = data.names;
     wellOptions.forEach((well) => {
       selector
@@ -24,6 +24,7 @@
   })
   }
 
+  //CALL FUNCTION TO CREATE DROPDOWN MENU VALUES
 createDropdownOptions();
 
   function curvesHome() {
@@ -94,20 +95,33 @@ createDropdownOptions();
   };
 
 
-  // TRYING TO GET SITE NAMES FROM VARIABLE INTO DROP DOWN...SO I CAN DELETE THE NAMES FROM THE HTML
-  var siteNames = wellNames;
-  console.log(siteNames);
+
 
   //THIS CODE IS TO UNDERSTAND WHAT THE HECK IS HAPPENING !!!!!!
+
+    // TRYING TO GET SITE NAMES FROM VARIABLE INTO DROP DOWN...SO I CAN DELETE THE NAMES FROM THE HTML
+  //var siteNames = wellNames;
+  // console.log(siteNames);
+
+
+  // var allProduction = productionData; productionData.js used to access production data - unnecessary, since CSV is accessed the same way and I can actually save it straight from Voila
+  // console.log(allProduction[0]);
+
   d3.csv('/DATA/data.csv').then(data => {
+    //console.log(data);
     console.log(data[0]);
-    var selectedWell = data.map(site => site.Site_Name);
+    //console.log(data[67]['Site_Name']);
+    //data.forEach(site => console.log(Object.values(site))); //THIS IS IT! THIS PRINTS EVERY ROW OF THE DATA
+
+    // THIS DOES NOT WORK -> data.forEach(site => console.log(site => Object.values(site))); //.filter(point => point.Site_Name === "CROC 1H"))));
+   // console.log(Object.values(data));
+    var selectedWell = data.map(site => site.Site_Name === "CROC 1H"); //NEED VALUES, OBJECTVALUES METHOD PERHAPS and need to run a forloop of some sort
     //console.log(selectedWell);
     //data.forEach(element => {
       //console.log(element.Site_Name)}); //close forEach
   });
 
-  d3.json("/DATA/mostRecentProduction.json").then((data) =>{ //need to export with correct datetime format
+  d3.json("/DATA/allData.json").then((data) =>{ //need to export with correct datetime format
     console.log(data);
   });
 
@@ -126,6 +140,7 @@ createDropdownOptions();
 
   // THIS CODE IS CREATING THE CURVES
     d3.csv("croc.csv").then(function(data) {
+      console.log(data[0])
     var croc_oil= data.map(data => data.Oil_BBL);
     var croc_gas= data.map(data => data.Gas_MCF);
     var croc_water= data.map(data => data.Water_BBL);
