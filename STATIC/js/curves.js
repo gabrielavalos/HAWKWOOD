@@ -1,11 +1,4 @@
-// CODE FOR CURVES NEED TO MAKE INTO A FUNCTION
-
-//d3.selectAll("#siteSelection").on("change", declineCurves);
-
-//function declineCurves() {
-
-  //var dropDownMenu = d3.select("#siteSelection")
-  //var dataset = dropDownMenu.property("value");
+// CODE FOR CURVES 
 
 //FUNCTION TO CREATE DROP DOWN VALUES
   function createDropdownOptions() {
@@ -24,39 +17,52 @@
   })
   }
 
-  //CALL FUNCTION TO CREATE DROPDOWN MENU VALUES
-createDropdownOptions();
+//CALL FUNCTION TO CREATE DROPDOWN MENU VALUES
+  createDropdownOptions();
 
-  function curvesHome() {
-      // THIS CODE IS CREATING THE CURVES
-      d3.csv("croc.csv").then(function(data) {
-        var croc_oil= data.map(data => data.Oil_BBL);
-        var croc_gas= data.map(data => data.Gas_MCF);
-        var croc_water= data.map(data => data.Water_BBL);
-        var croc_date= data.map(data => data.Date);  
-        //console.log(croc_oil);
-        //console.log(croc_date);
-        //console.log(croc_gas);
-        //console.log(croc_water);
-        // oil decline curve data
+  d3.selectAll('body').on('change', updateCurves);
 
-        // open oil data
+  function updateCurves(){
+    var dropdownMenu = d3.selectAll("#siteSelection").node();
+    var dropdownMenuID = dropdownMenu.id;
+    var selectedOption = dropdownMenu.value;
+    console.log(dropdownMenuID);
+    console.log(selectedOption);
+    d3.json("/DATA/values_orientation.json").then((data) =>{ //THIS WORKS!!!
+      var site_oil = [];
+      var site_gas = [];
+      var site_water = [];
+      var site_date = [];
+
+      new Promise ((resolve) => data.forEach(site => {if (site[0]===selectedOption) {
+        //console.log(site);        
+          site_oil.push(site[2]);
+          site_gas.push(site[3]);
+          site_water.push(site[4]);
+          site_date.push(site[8]) 
+      } resolve()}));
+
+        console.log(site_oil);
+        console.log(site_gas)
+        console.log(site_water);
+        console.log(site_date)
+
         var dataOil = [{
-          x: croc_date,
-          y: croc_oil,
+          x: site_date,
+          y: site_oil,
         type: "line" }]; // close oil data
         // open oil layout
         var layoutOil = {
           title: "Oil BBL"
         };//close oil layout
         // call oil data and layout to plot
-        Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
+       Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil); 
     
         // gas decline curve data
         // open gas data
         var dataGas = [{
-          x: croc_date,
-          y: croc_gas,
+          x: site_date,
+          y: site_gas,
         type: "line" }]; //close gas data
         // open gas layout
         var layoutGas = {
@@ -68,8 +74,8 @@ createDropdownOptions();
         // water decline curve data
         //open water data
         var dataWater = [{
-          x: croc_date,
-          y: croc_water,
+          x: site_date,
+          y: site_water,
         type: "line" }]; //close water data
         //open water layout
         var layoutWater = {
@@ -77,22 +83,73 @@ createDropdownOptions();
         };//close water layout
         //call water data & layout to plot
         Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
-      });
-  }
+      })};
+  
+      
 
-  d3.selectAll('body').on('change', updateCurves);
 
-  function updateCurves(){
-    var dropdownMenu = d3.selectAll("#siteSelection").node();
-    var dropdownMenuID = dropdownMenu.id;
-    var selectedOption = dropdownMenu.value;
-    console.log(dropdownMenuID);
-    console.log(selectedOption);
-    d3.csv('/DATA/data.csv').then(data => {
-      console.log(data[0]);
-      var selectedWell = data.filter(site => site.Site_name === selectedOption);
-      console.log(selectedWell)});
-  };
+// //FUNCTION TO CREATE CURVES
+// function curvesHome() {
+//   // THIS CODE IS CREATING THE CURVES
+//   d3.csv("croc.csv").then(function(data) {
+//     var croc_oil= data.map(data => data.Oil_BBL);
+//     var croc_gas= data.map(data => data.Gas_MCF);
+//     var croc_water= data.map(data => data.Water_BBL);
+//     var croc_date= data.map(data => data.Date);  
+//     //console.log(croc_oil);
+//     //console.log(croc_date);
+//     //console.log(croc_gas);
+//     //console.log(croc_water);
+//     // oil decline curve data
+
+//     // open oil data
+//     var dataOil = [{
+//       x: croc_date,
+//       y: croc_oil,
+//     type: "line" }]; // close oil data
+//     // open oil layout
+//     var layoutOil = {
+//       title: "Oil BBL"
+//     };//close oil layout
+//     // call oil data and layout to plot
+//     Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
+
+//     // gas decline curve data
+//     // open gas data
+//     var dataGas = [{
+//       x: croc_date,
+//       y: croc_gas,
+//     type: "line" }]; //close gas data
+//     // open gas layout
+//     var layoutGas = {
+//       title: "Gas BBL"
+//     }; //close gas layout
+//     //call gas data & layout to plot
+//     Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas); 
+
+//     // water decline curve data
+//     //open water data
+//     var dataWater = [{
+//       x: croc_date,
+//       y: croc_water,
+//     type: "line" }]; //close water data
+//     //open water layout
+//     var layoutWater = {
+//       title: "Water BBL"
+//     };//close water layout
+//     //call water data & layout to plot
+//     Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
+//   })
+// }
+
+//curvesHome();
+
+
+    //d3.csv('/DATA/data.csv').then(data => {
+      //console.log(data[0]);
+      //var selectedWell = data.filter(site => site.Site_name === selectedOption);
+      //console.log(selectedWell)});
+  
 
 
 
@@ -107,23 +164,29 @@ createDropdownOptions();
   // var allProduction = productionData; productionData.js used to access production data - unnecessary, since CSV is accessed the same way and I can actually save it straight from Voila
   // console.log(allProduction[0]);
 
-  d3.csv('/DATA/data.csv').then(data => {
+  // d3.csv('/DATA/data.csv').then(data => {
+  //   //console.log(data);
+  //   console.log(data[0]);
+  //   //console.log(data[67]['Site_Name']);
+  //   //data.forEach(site => console.log(Object.values(site))); //THIS IS IT! THIS PRINTS EVERY ROW OF THE DATA
+
+  //   // THIS DOES NOT WORK -> data.forEach(site => console.log(site => Object.values(site))); //.filter(point => point.Site_Name === "CROC 1H"))));
+  //  // console.log(Object.values(data));
+  //   var selectedWell = data.map(site => site.Site_Name === "CROC 1H"); //NEED VALUES, OBJECTVALUES METHOD PERHAPS and need to run a forloop of some sort
+  //   //console.log(selectedWell);
+  //   //data.forEach(element => {
+  //     //console.log(element.Site_Name)}); //close forEach
+  // });
+
+  //d3.json("/DATA/allData.json").then((data) =>{ //read same as csv
     //console.log(data);
-    console.log(data[0]);
-    //console.log(data[67]['Site_Name']);
-    //data.forEach(site => console.log(Object.values(site))); //THIS IS IT! THIS PRINTS EVERY ROW OF THE DATA
+  //});
 
-    // THIS DOES NOT WORK -> data.forEach(site => console.log(site => Object.values(site))); //.filter(point => point.Site_Name === "CROC 1H"))));
-   // console.log(Object.values(data));
-    var selectedWell = data.map(site => site.Site_Name === "CROC 1H"); //NEED VALUES, OBJECTVALUES METHOD PERHAPS and need to run a forloop of some sort
-    //console.log(selectedWell);
-    //data.forEach(element => {
-      //console.log(element.Site_Name)}); //close forEach
-  });
-
-  d3.json("/DATA/allData.json").then((data) =>{ //need to export with correct datetime format
-    console.log(data);
-  });
+  // d3.json("/DATA/values_orientation.json").then((data) =>{ //THIS WORKS!!! 
+  //   data.forEach(site => {if (site[0]=="CROC 1H") {
+  //     console.log(site);
+  //   }})
+  // });
 
 
 
@@ -138,42 +201,42 @@ createDropdownOptions();
   
   
 
-  // THIS CODE IS CREATING THE CURVES
-    d3.csv("croc.csv").then(function(data) {
-      console.log(data[0])
-    var croc_oil= data.map(data => data.Oil_BBL);
-    var croc_gas= data.map(data => data.Gas_MCF);
-    var croc_water= data.map(data => data.Water_BBL);
-    var croc_date= data.map(data => data.Date);  
-    //console.log(croc_oil);
-    //console.log(croc_date);
-    //console.log(croc_gas);
-    //console.log(croc_water);
-    // oil decline curve data
-    var dataOil = [{
-      x: croc_date,
-      y: croc_oil,
-    type: "line" }];
-    var layoutOil = {
-      title: "Oil BBL"
-    };
-    Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
+  // // THIS CODE IS CREATING THE CURVES
+  //   d3.csv("croc.csv").then(function(data) {
+  //     console.log(data[0])
+  //   var croc_oil= data.map(data => data.Oil_BBL);
+  //   var croc_gas= data.map(data => data.Gas_MCF);
+  //   var croc_water= data.map(data => data.Water_BBL);
+  //   var croc_date= data.map(data => data.Date);  
+  //   //console.log(croc_oil);
+  //   //console.log(croc_date);
+  //   //console.log(croc_gas);
+  //   //console.log(croc_water);
+  //   // oil decline curve data
+  //   var dataOil = [{
+  //     x: croc_date,
+  //     y: croc_oil,
+  //   type: "line" }];
+  //   var layoutOil = {
+  //     title: "Oil BBL"
+  //   };
+  //   Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
 
-    // gas decline curve data
-    var dataGas = [{
-      x: croc_date,
-      y: croc_gas,
-    type: "line" }];
-    var layoutGas = {
-      title: "Gas BBL"};
-    Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
+  //   // gas decline curve data
+  //   var dataGas = [{
+  //     x: croc_date,
+  //     y: croc_gas,
+  //   type: "line" }];
+  //   var layoutGas = {
+  //     title: "Gas BBL"};
+  //   Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
 
-    // water decline curve data
-    var dataWater = [{
-      x: croc_date,
-      y: croc_water,
-    type: "line" }];
-    var layoutWater = {
-      title: "Water BBL"};
-    Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
-  });
+  //   // water decline curve data
+  //   var dataWater = [{
+  //     x: croc_date,
+  //     y: croc_water,
+  //   type: "line" }];
+  //   var layoutWater = {
+  //     title: "Water BBL"};
+  //   Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
+  //   ;
