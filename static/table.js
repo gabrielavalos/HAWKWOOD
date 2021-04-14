@@ -1,8 +1,14 @@
+d3.json('/static/todaysImport.json').then((data) => {
+  // console.log(data);
+  const tableData = data.todaysImport;
+
+
 // a way to read in all production data from a .js file
-const tableData = recentImport;
+//const tableData = recentImport;
 console.log(tableData);
 //global declaration of tbody, since it will be accessed in and out of functions
-var tbody = d3.select("tbody");
+var tbody = d3.select("tbody")
+
 
 // CODE FOR MOST RECENT PRODUCTION IN TABULAR FORM
 // function to import the data from recent.json, saved in this folder from Jupyter Notebook
@@ -28,13 +34,14 @@ function buildTable(tableData) {
   }; //closing d3
 
 
+
 function handleClick() {
   // the value entered in the sitename filter becomes the value for the siteName variable
   let requestedSiteName = d3.select("#siteName").property("value");
   // set data be filtered to imported data (the data ready to be filtered)
   let filteredData = tableData;
   if (requestedSiteName) {
-    filteredData = filteredData.filter(row => row.Site_Name == requestedSiteName)
+    filteredData = filteredData.filter(row => row[0] == requestedSiteName)
     console.log(filteredData); //check to see what this looks like because i dont understand it
   };
   //build table using the filteredData variable
@@ -46,4 +53,5 @@ d3.selectAll('#filter-btn').on("click", handleClick);
 
 //build table as soon as table loads
 buildTable(tableData);
+});
 
