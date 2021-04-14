@@ -20,6 +20,71 @@
 //CALL FUNCTION TO CREATE DROPDOWN MENU VALUES
   createDropdownOptions();
 
+// //FUNCTION TO CREATE HOME CURVES
+// function curvesHome() {
+//   d3.json("/static/all_production.json").then((data) =>{ //THIS WORKS!!!
+//     var home_oil = [];
+//     var home_gas = [];
+//     var home_water = [];
+//     var home_date = [];
+//     new Promise ((resolve) => data.forEach(site => {if (site[0] === "CROC 1H") {
+//       //console.log(site); 
+//       home_oil.push(site[2]);
+//       home_gas.push(site[3]);
+//       home_water.push(site[4]);
+//       home_date.push(site[8])
+//     } resolve()}));
+
+//     //console.log(croc_oil);
+//     //console.log(croc_date);
+//     //console.log(croc_gas);
+//     //console.log(croc_water);
+//     // oil decline curve data
+
+//     // open oil data
+//     var dataOil = [{
+//       x: home_date,
+//       y: home_oil,
+//     type: "line" }]; // close oil data
+//     // open oil layout
+//     var layoutOil = {
+//       title: "Oil BBL"
+//     };//close oil layout
+//     // call oil data and layout to plot
+//     Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
+
+//     // gas decline curve data
+//     // open gas data
+//     var dataGas = [{
+//       x: home_date,
+//       y: home_gas,
+//     type: "line" }]; //close gas data
+//     // open gas layout
+//     var layoutGas = {
+//       title: "Gas BBL"
+//     }; //close gas layout
+//     //call gas data & layout to plot
+//     //Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas); 
+
+//     // water decline curve data
+//     //open water data
+//     var dataWater = [{
+//       x: home_date,
+//       y: home_water,
+//     type: "line" }]; //close water data
+//     //open water layout
+//     var layoutWater = {
+//       title: "Water BBL"
+//     };//close water layout
+//     //call water data & layout to plot
+//     //Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
+//   })
+// }
+
+// curvesHome();
+
+
+// LISTENER FOR CHANGE ON DROP DOWN MENU
   d3.selectAll('body').on('change', updateCurves);
 
   function updateCurves(){
@@ -35,10 +100,15 @@
       var site_date = [];
 
       new Promise ((resolve) => data.forEach(site => {if (site[0]===selectedOption) {
+        {if (site[2] > 1){ site_oil.push(site[2])}}
+        {if (site[3] > 1){ site_gas.push(site[3])}}
+        {if (site[4] > 1){ site_water.push(site[4])}}
+    
+
         //console.log(site);        
-          site_oil.push(site[2]);
-          site_gas.push(site[3]);
-          site_water.push(site[4]);
+          //site_oil.push(site[2]);
+          //site_gas.push(site[3]);
+          //site_water.push(site[4]);
           site_date.push(site[8]) 
       } resolve()}));
 
@@ -50,10 +120,17 @@
         var dataOil = [{
           x: site_date,
           y: site_oil,
-        type: "line" }]; // close oil data
+        type: "line",
+        line: 
+          {color: "green"}
+     }]; // close oil data
         // open oil layout
         var layoutOil = {
-          title: "Oil BBL"
+          title: "Oil BBL",
+          yaxis: {
+            type: 'log',
+            autorange: true
+          }
         };//close oil layout
         // call oil data and layout to plot
        Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil); 
@@ -63,10 +140,16 @@
         var dataGas = [{
           x: site_date,
           y: site_gas,
-        type: "line" }]; //close gas data
+        type: "line",
+        line: 
+          {color: "red"} }]; //close gas data
         // open gas layout
         var layoutGas = {
-          title: "Gas BBL"
+          title: "Gas BBL",
+          yaxis: {
+            type: 'log',
+            autorange: true
+          }
         }; //close gas layout
         //call gas data & layout to plot
         Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas); 
@@ -79,7 +162,11 @@
         type: "line" }]; //close water data
         //open water layout
         var layoutWater = {
-          title: "Water BBL"
+          title: "Water BBL",
+          yaxis: {
+            type: 'log',
+            autorange: true
+          }
         };//close water layout
         //call water data & layout to plot
         Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
@@ -88,14 +175,21 @@
       
 
 
-// //FUNCTION TO CREATE CURVES
+// //FUNCTION TO CREATE HOME CURVES
 // function curvesHome() {
-//   // THIS CODE IS CREATING THE CURVES
-//   d3.csv("croc.csv").then(function(data) {
-//     var croc_oil= data.map(data => data.Oil_BBL);
-//     var croc_gas= data.map(data => data.Gas_MCF);
-//     var croc_water= data.map(data => data.Water_BBL);
-//     var croc_date= data.map(data => data.Date);  
+//   d3.json("/static/all_production.json").then((data) =>{ //THIS WORKS!!!
+//     var home_oil = [];
+//     var home_gas = [];
+//     var home_water = [];
+//     var home_date = [];
+//     new Promise ((resolve) => data.forEach(site => {if (site[0] === "CROC 1H") {
+//       //console.log(site); 
+//       home_oil.push(site[2]);
+//       home_gas.push(site[3]);
+//       home_water.push(site[4]);
+//       home_date.push(site[8])
+//     } resolve()}));
+
 //     //console.log(croc_oil);
 //     //console.log(croc_date);
 //     //console.log(croc_gas);
@@ -104,45 +198,45 @@
 
 //     // open oil data
 //     var dataOil = [{
-//       x: croc_date,
-//       y: croc_oil,
+//       x: home_date,
+//       y: home_oil,
 //     type: "line" }]; // close oil data
 //     // open oil layout
 //     var layoutOil = {
 //       title: "Oil BBL"
 //     };//close oil layout
 //     // call oil data and layout to plot
-//     Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
+//     Plotly.newPlot("TESToilDeclineCurve", dataOil, layoutOil);
 
 //     // gas decline curve data
 //     // open gas data
 //     var dataGas = [{
-//       x: croc_date,
-//       y: croc_gas,
+//       x: home_date,
+//       y: home_gas,
 //     type: "line" }]; //close gas data
 //     // open gas layout
 //     var layoutGas = {
 //       title: "Gas BBL"
 //     }; //close gas layout
 //     //call gas data & layout to plot
-//     Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas); 
+//     Plotly.newPlot("TESTgasDeclineCurve", dataGas, layoutGas); 
 
 //     // water decline curve data
 //     //open water data
 //     var dataWater = [{
-//       x: croc_date,
-//       y: croc_water,
+//       x: home_date,
+//       y: home_water,
 //     type: "line" }]; //close water data
 //     //open water layout
 //     var layoutWater = {
 //       title: "Water BBL"
 //     };//close water layout
 //     //call water data & layout to plot
-//     Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
+//     Plotly.newPlot("TESTwaterDeclineCurve", dataWater, layoutWater);
 //   })
 // }
 
-//curvesHome();
+// curvesHome();
 
 
     //d3.csv('/DATA/data.csv').then(data => {
