@@ -5,7 +5,7 @@
     //select dropdown <select> in well.html with id:"siteSelection"
     var selector = d3.select("#siteSelection");
     //read in the wellNames.json file, which contains the array "names" with all the well names
-    d3.json('/static/wellNames.json').then((data) => {
+    d3.json('./static/wellNames.json').then((data) => {
       // console.log(data);
     var wellOptions = data.names;
     wellOptions.forEach((well) => {
@@ -93,7 +93,7 @@
     var selectedOption = dropdownMenu.value;
     console.log(dropdownMenuID);
     console.log(selectedOption);
-    d3.json("/static/all_production.json").then((data) =>{ //THIS WORKS!!!
+    d3.json("./static/all_production.json").then((data) =>{ //THIS WORKS!!!
       var site_oil = [];
       var site_gas = [];
       var site_water = [];
