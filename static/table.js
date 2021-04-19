@@ -1,5 +1,5 @@
 d3.json('./static/todaysImport.json').then((data) => {
-  // console.log(data);
+   console.log(data);
   const tableData = data.todaysImport;
 
 
