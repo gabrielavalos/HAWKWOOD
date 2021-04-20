@@ -93,7 +93,7 @@
     var selectedOption = dropdownMenu.value;
     console.log(dropdownMenuID);
     console.log(selectedOption);
-    d3.json("./static/all_production.json").then((data) =>{ //THIS WORKS!!!
+    d3.json("./static/production_summary.json").then((data) =>{ //THIS WORKS!!!
       var site_oil = [];
       var site_gas = [];
       var site_water = [];
