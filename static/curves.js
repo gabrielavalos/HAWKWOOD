@@ -20,31 +20,40 @@
 //CALL FUNCTION TO CREATE DROPDOWN MENU VALUES
 createDropdownOptions();
 
+function getYearFromNow(dt,n) {
+  return new Date(dt.setFullYear(dt.getFullYear() + n));
+}
+
 // //FUNCTION TO CREATE HOME/SUMMARY CURVES
 function curvesHome() {
-  d3.json("./static/production_summary.json").then((data) =>{ //THIS WORKS!!!
+  d3.json("./static/all_production.json").then((data) =>{ //THIS WORKS!!!
     var site_oil = [];
     var site_gas = [];
     var site_water = [];
     var site_date = [];
 
     new Promise ((resolve) => data.forEach(site => {if (site[0]==="Summary") {
-      {if (site[2] > 1){ site_oil.push(site[2])}}
-      {if (site[3] > 1){ site_gas.push(site[3])}}
-      {if (site[4] > 1){ site_water.push(site[4])}}
-  
-
-      //console.log(site);        
-        //site_oil.push(site[2]);
-        //site_gas.push(site[3]);
-        //site_water.push(site[4]);
+      {if (site[2]){ site_oil.push(site[2])}}
+      {if (site[3]){ site_gas.push(site[3])}}
+      {if (site[4]){ site_water.push(site[4])}}
         site_date.push(site[8]) 
     } resolve()}));
 
       console.log(site_oil);
-      console.log(site_gas)
+      console.log(site_gas);
       console.log(site_water);
-      console.log(site_date)
+      console.log(site_date);
+      console.log(typeof site_date[site_date.length-1])
+      console.log(Date.parse(site_date[0]))
+      console.log(Date((site_date[0])))
+      console.log(Date((site_date[0])))
+
+
+      // var dt = Date((site_date[0]));
+      // console.log(getYearFromNow(dt,1).toString);
+
+     // var aYearFromToday = todaysDate.setFullYear(todaysDate.getFullYear() + 1);
+      //console.log(aYearFromToday);
 
       var dataOil = [{
         x: site_date,
@@ -59,6 +68,10 @@ function curvesHome() {
         yaxis: {
           type: 'log',
           autorange: true
+        },
+        xaxis: {
+          autorange: false,
+          range: [site_date[site_date.length-1], '2022-04-21']
         }
       };//close oil layout
       // call oil data and layout to plot
@@ -78,6 +91,10 @@ function curvesHome() {
         yaxis: {
           type: 'log',
           autorange: true
+        },
+        xaxis: {
+          autorange: false,
+          range: [site_date[site_date.length-1], '2022-04-21']
         }
       }; //close gas layout
       //call gas data & layout to plot
@@ -95,6 +112,10 @@ function curvesHome() {
         yaxis: {
           type: 'log',
           autorange: true
+        },
+        xaxis: {
+          autorange: false,
+          range: [site_date[site_date.length-1], '2022-04-21']
         }
       };//close water layout
       //call water data & layout to plot
@@ -108,36 +129,35 @@ curvesHome();
 // LISTENER FOR CHANGE ON DROP DOWN MENU
   d3.selectAll('body').on('change', updateCurves);
 
+  //FUNCTION TO CHANGE CURVES BASED ON DROP DOWN SELECTION
   function updateCurves(){
     var dropdownMenu = d3.selectAll("#siteSelection").node();
     var dropdownMenuID = dropdownMenu.id;
     var selectedOption = dropdownMenu.value;
     console.log(dropdownMenuID);
     console.log(selectedOption);
-    d3.json("./static/production_summary.json").then((data) =>{ //THIS WORKS!!!
+    d3.json("./static/all_production.json").then((data) =>{ //THIS WORKS!!!
       var site_oil = [];
       var site_gas = [];
       var site_water = [];
       var site_date = [];
 
       new Promise ((resolve) => data.forEach(site => {if (site[0]===selectedOption) {
-        {if (site[2] > 1){ site_oil.push(site[2])}}
-        {if (site[3] > 1){ site_gas.push(site[3])}}
-        {if (site[4] > 1){ site_water.push(site[4])}}
-    
-
-        //console.log(site);        
-          //site_oil.push(site[2]);
-          //site_gas.push(site[3]);
-          //site_water.push(site[4]);
-          site_date.push(site[8]) 
-      } resolve()}));
+        {if (site[2]){ site_oil.push(site[2])}}
+        {if (site[3]){ site_gas.push(site[3])}}
+        {if (site[4]){ site_water.push(site[4])}}
+        site_date.push(site[8])
+         resolve()}}));
 
         console.log(site_oil);
         console.log(site_gas)
         console.log(site_water);
-        console.log(site_date)
+        console.log(site_date);
+        //console.log(site_date[1062]);
+        //console.log(site_date.length-1);
+        console.log(site_date[site_date.length-1])
 
+       //OIL CURVE////
         var dataOil = [{
           x: site_date,
           y: site_oil,
@@ -150,7 +170,12 @@ curvesHome();
           title: "Oil BBL",
           yaxis: {
             type: 'log',
-            autorange: true
+            //range: [1,3], //BASED ON CYCLES
+            autorange: true //STILL NEED TO WORK ON YAXIS SCALE
+          },
+          xaxis: {
+            autorange: false,
+            range: [site_date[site_date.length-1], '2022-04-21']
           }
         };//close oil layout
         // call oil data and layout to plot
@@ -170,6 +195,10 @@ curvesHome();
           yaxis: {
             type: 'log',
             autorange: true
+          },
+          xaxis: {
+            autorange: false,
+            range: [site_date[site_date.length-1], '2022-04-21']
           }
         }; //close gas layout
         //call gas data & layout to plot
@@ -187,6 +216,10 @@ curvesHome();
           yaxis: {
             type: 'log',
             autorange: true
+          },
+          xaxis: {
+            autorange: false,
+            range: [site_date[site_date.length-1], '2022-04-21']
           }
         };//close water layout
         //call water data & layout to plot
