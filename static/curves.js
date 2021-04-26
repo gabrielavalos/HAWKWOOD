@@ -20,9 +20,9 @@
 //CALL FUNCTION TO CREATE DROPDOWN MENU VALUES
 createDropdownOptions();
 
-function getYearFromNow(dt,n) {
-  return new Date(dt.setFullYear(dt.getFullYear() + n));
-}
+// function getYearFromNow(dt,n) {
+//   return new Date(dt.setFullYear(dt.getFullYear() + n));
+// }
 
 // //FUNCTION TO CREATE HOME/SUMMARY CURVES
 function curvesHome() {
@@ -43,17 +43,64 @@ function curvesHome() {
       console.log(site_gas);
       console.log(site_water);
       console.log(site_date);
-      console.log(typeof site_date[site_date.length-1])
-      console.log(Date.parse(site_date[0]))
-      console.log(Date((site_date[0])))
-      console.log(Date((site_date[0])))
 
 
-      // var dt = Date((site_date[0]));
-      // console.log(getYearFromNow(dt,1).toString);
+/////// CODE TO GET MAX LIMIT FOR X-AXIS RANGE ////
+
+      //console.log(site_date[0]) //MOST RECENT ITEM/DATE IN site_date ARRAY 2021-04-2020
+      //console.log(new Date((site_date[0]))) //MOST RECENT DATE ITEM IN site_date ARRAY TURNED INTO DATE, 'Mon Apr 19 2021 19:00:00 GMT-0500 (Central Daylight Time)' BECAUSE HOUR IS 19 IT IS TURNED TO YESTERDAY
+
+      var mostRecentEntry = site_date[0]; //MOST RECENT DATE WITHOUT HOUR AS VARIABLE
+      var addingHours = "T00:00"; //HOURS TO ADD TO MOST RECENT DATE - NEEDED TO NORMALIZE FROM ORIGINAL 19 HOUR FORMAT
+      var nextYear = mostRecentEntry.concat(addingHours); //DATE AND HOUR AS SINGLE VARIABLE TO MAKE INTO DATE
+     // console.log(nextYear);
+
+      var mostRecentDate = new Date(nextYear); //MAKE VARIABLE INTO DATE
+      //console.log(mostRecentDate); //THIS IS AN OBJECT TYPE
+
+      var nextYearsDate = new Date(mostRecentDate.setFullYear(mostRecentDate.getFullYear() + 1)); //GET YEAR FROM MOST RECENT DATE AND ADD A YEAR 
+      //console.log(typeof nextYearsDate);
+
+      var nextYear= nextYearsDate.getFullYear() //GET NEXT YEARS DATE
+      var nextMonth= nextYearsDate.getMonth() + 1 // GET NEXTS YEARS MONTH, ADD ONE BECAUSE MONTHS ARE INDEXED AT 0
+      var nextDate= nextYearsDate.getDate() //GET NEXT YEARS DATE
+
+     // console.log(nextYear);
+      //console.log(nextMonth);
+      //console.log(nextDate);
+
+      nextYearGraph = `${nextYear}-${nextMonth}-${nextDate}`; // CREATE FULL DATE FOR NEXT YEAR IN RIGHT FORMAT FOR AXIS
+      console.log(`${nextYearGraph} is a year from the most recent production date`);
+      
+
+      //var mostRecentEntry = new Date((site_date[0])).setHours(0)
+      //console.log(mostRecentDate);
+      //var nextDateYear = nextYearsDate.getFullYear() +1; // THIS WORKS FOR NEXT YEAR -- THIS IS WHAT I NEED TO MAKE A NUMMBER TO OBJECT TYPE FOR CORRECT REPRESENTATION OF DATE, KEY WORD"new"
+      //console.log(nextDateYear);
+
+      //var nextDateMonth = nextYearsDate.getMonth();
+      //console.log(nextDateMonth); // GETS CORRECT DATE AS MONTHS ARE 0 INDEXED, SO MONTH 3 IS ACTUALLY APRIL, ALL IS GOOD IN THE HOOD!
+
+      //var nextDateDay = nextYearsDate.getDate(); //THIS WORKS
+      //console.log(nextDateDay);
+
+      //console.log(typeof site_date[site_date.length-1])
+      //console.log(site_date[site_date.length-1]) //EARLIEST DATE, LAST ITEM ON LIST
+      
+      //var nextDateTest = Date.parse(site_date[0]);
+      //var anotherTest = nextDateTest.getDate()
+      //nextDate.setYear(nextDate.getFullYear()+1);
+      //nextDate.setDate(nextDate.getDate()-1);
+      //nextDate.setDate(nextDate.getDate()+364);
+      
+      //console.log(typeof nextDateTest);
+    
+      //console.log(anotherTest);
+      //nextDateTest.setFullYear(nextDateTest.getFullYear()+1)
 
      // var aYearFromToday = todaysDate.setFullYear(todaysDate.getFullYear() + 1);
       //console.log(aYearFromToday);
+      
 
       var dataOil = [{
         x: site_date,
@@ -71,7 +118,7 @@ function curvesHome() {
         },
         xaxis: {
           autorange: false,
-          range: [site_date[site_date.length-1], '2022-04-21']
+          range: [site_date[site_date.length-1], nextYearGraph]
         }
       };//close oil layout
       // call oil data and layout to plot
@@ -94,7 +141,7 @@ function curvesHome() {
         },
         xaxis: {
           autorange: false,
-          range: [site_date[site_date.length-1], '2022-04-21']
+          range: [site_date[site_date.length-1], nextYearGraph]
         }
       }; //close gas layout
       //call gas data & layout to plot
@@ -115,7 +162,7 @@ function curvesHome() {
         },
         xaxis: {
           autorange: false,
-          range: [site_date[site_date.length-1], '2022-04-21']
+          range: [site_date[site_date.length-1], nextYearGraph]
         }
       };//close water layout
       //call water data & layout to plot
@@ -152,10 +199,8 @@ curvesHome();
         console.log(site_oil);
         console.log(site_gas)
         console.log(site_water);
-        console.log(site_date);
-        //console.log(site_date[1062]);
-        //console.log(site_date.length-1);
-        console.log(site_date[site_date.length-1])
+        console.log(site_date)
+        console.log(`${nextYearGraph} is a year from the most recent production date`);
 
        //OIL CURVE////
         var dataOil = [{
@@ -175,7 +220,7 @@ curvesHome();
           },
           xaxis: {
             autorange: false,
-            range: [site_date[site_date.length-1], '2022-04-21']
+            range: [site_date[site_date.length-1], nextYearGraph]
           }
         };//close oil layout
         // call oil data and layout to plot
@@ -198,7 +243,7 @@ curvesHome();
           },
           xaxis: {
             autorange: false,
-            range: [site_date[site_date.length-1], '2022-04-21']
+            range: [site_date[site_date.length-1], nextYearGraph]
           }
         }; //close gas layout
         //call gas data & layout to plot
@@ -219,7 +264,7 @@ curvesHome();
           },
           xaxis: {
             autorange: false,
-            range: [site_date[site_date.length-1], '2022-04-21']
+            range: [site_date[site_date.length-1], nextYearGraph]
           }
         };//close water layout
         //call water data & layout to plot

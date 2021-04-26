@@ -22,7 +22,7 @@ function buildTable(tableData) {
     // loop thrugh the array
     tableData.forEach((well) => {
       //print each object in the array to the console
-      console.log(well);
+      //console.log(well);
       // for each well add a row to the tbody
       let row = tbody.append("tr");
       // loop through each value to add a cell for each of it
@@ -35,9 +35,28 @@ function buildTable(tableData) {
 
 
 
+//FUNCTION TO CREATE DROP DOWN VALUES
+function createDropdownOptions() {
+  //select dropdown <select> in well.html with id:"siteSelection"
+  var selector = d3.select("#siteFilter");
+  //read in the wellNames.json file, which contains the array "names" with all the well names
+  d3.json('./static/wellNames.json').then((data) => {
+    // console.log(data);
+  var wellOptions = data.names;
+  wellOptions.forEach((well) => {
+    selector
+      .append('option')
+      .text(well)
+      .property('Value', well);
+  })
+})
+}
+
+createDropdownOptions();
+
 function handleClick() {
   // the value entered in the sitename filter becomes the value for the siteName variable
-  let requestedSiteName = d3.select("#siteName").property("value");
+  let requestedSiteName = d3.select("#siteFilter").property("value");
   // set data be filtered to imported data (the data ready to be filtered)
   let filteredData = tableData;
   if (requestedSiteName) {
@@ -49,9 +68,10 @@ function handleClick() {
 };
 
 //create listener for when user wants to filter data
-d3.selectAll('#filter-btn').on("click", handleClick);
+//d3.selectAll('#filter-btn').on("click", handleClick);
+
+d3.selectAll('#siteFilter').on('change', handleClick);
 
 //build table as soon as table loads
 buildTable(tableData);
 });
-
