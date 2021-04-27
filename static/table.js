@@ -1,6 +1,6 @@
 d3.json('./static/todaysImport.json').then((data) => {
    //console.log(data);
-tableData = data.todaysImport;
+tableData = data
 console.log(tableData);
 
 
@@ -77,7 +77,7 @@ d3.selectAll('#siteFilter').on("change", handleClick);
 //FUCTION TO CLEAR FILTERED TABLE
 function clearTable(tableData){
   d3.json('./static/todaysImport.json').then((data) => {
-    tableData = data.todaysImport;
+    tableData = data;
     tbody = d3.select("tbody");
     tbody.html("");
     tableData.forEach((well) => {
