@@ -1,13 +1,14 @@
 d3.json('./static/todaysImport.json').then((data) => {
-   console.log(data);
-  const tableData = data.todaysImport;
+   //console.log(data);
+tableData = data.todaysImport;
+console.log(tableData);
 
 
 // a way to read in all production data from a .js file
 //const tableData = recentImport;
-console.log(tableData);
+//console.log(tableData);
 //global declaration of tbody, since it will be accessed in and out of functions
-var tbody = d3.select("tbody")
+tbody = d3.select("tbody")
 
 
 // CODE FOR MOST RECENT PRODUCTION IN TABULAR FORM
@@ -50,7 +51,7 @@ function createDropdownOptions() {
       .property('Value', well);
   })
 })
-}
+};
 
 createDropdownOptions();
 
@@ -67,11 +68,29 @@ function handleClick() {
   buildTable(filteredData);
 };
 
-//create listener for when user wants to filter data
-//d3.selectAll('#filter-btn').on("click", handleClick);
-
-d3.selectAll('#siteFilter').on('change', handleClick);
-
-//build table as soon as table loads
+//build table as soon as page loads
 buildTable(tableData);
+
+//create listener for when user wants to filter data
+d3.selectAll('#siteFilter').on("change", handleClick);
+
+//FUCTION TO CLEAR FILTERED TABLE
+function clearTable(tableData){
+  d3.json('./static/todaysImport.json').then((data) => {
+    tableData = data.todaysImport;
+    tbody = d3.select("tbody");
+    tbody.html("");
+    tableData.forEach((well) => {
+      let row = tbody.append("tr");
+      Object.values(well).forEach((val) => {
+        let cell = row.append("td");
+        cell.text(val);
+        //CODE TO RESET DROPDOWN i.e. CLEAR SELECTION
+        var dropDown = document.getElementById("siteFilter");  
+        dropDown.selectedIndex = 0
+      })})})};
+  
+ //LISTENER TO TRIGGER ClearTable FUNCTION
+ d3.selectAll('#clear-filter-btn').on("click", clearTable);
+
 });

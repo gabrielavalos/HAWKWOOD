@@ -49,6 +49,7 @@
       <tbody></tbody>
     </table>
   </div>
+  <!-- FILTERS HERE -->
     <div class="col-md-2">
       <div class="container-fluid" id="filters">
         <form>
@@ -57,11 +58,15 @@
             <li class="list-group-item">
               <!-- <label for="siteName">Enter Well Name:</label>
               <input type="text" placeholder="CROC 1H" id="siteName" /> -->
-              <select id='siteFilter'></select>
+              <select id='siteFilter'>
+                <!-- <option value="" selected="selected" hidden="hidden">Choose here</option> -->
+                 <option hidden value="default">Select An Option</option> 
+              </select>
+              
+              <!-- <li></li> -->
             </li>
-            <!-- <li class="list-group-item">
-              <button id="filter-btn" type="button" class="btn btn-primary">Filter Table</button>
-            </li> -->
+            <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
+  
           </ul>
         </form>
       </div> 

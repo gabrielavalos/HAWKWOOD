@@ -39,10 +39,10 @@ function curvesHome() {
         site_date.push(site[8]) 
     } resolve()}));
 
-      console.log(site_oil);
-      console.log(site_gas);
-      console.log(site_water);
-      console.log(site_date);
+      //console.log(site_oil);
+      //console.log(site_gas);
+      //console.log(site_water);
+      //console.log(site_date);
 
 
 /////// CODE TO GET MAX LIMIT FOR X-AXIS RANGE ////
@@ -196,10 +196,10 @@ curvesHome();
         site_date.push(site[8])
          resolve()}}));
 
-        console.log(site_oil);
-        console.log(site_gas)
-        console.log(site_water);
-        console.log(site_date)
+        //console.log(site_oil);
+        //console.log(site_gas)
+        //console.log(site_water);
+        //console.log(site_date)
         console.log(`${nextYearGraph} is a year from the most recent production date`);
 
        //OIL CURVE////
