@@ -51,28 +51,37 @@
   </div>
   <!-- FILTERS HERE -->
     <div class="col-md-2">
-      <div class="container-fluid" id="filters">
+      <div class="container-fluid pt-3" id="filters">
         <form>
-          <h5>Filter Data Here</h5>
-          <p>Press Ctrl to select multiple options</p>
+          <h5>Filter Data Here:</h5>
+          <p><strong>Single Well Select:</strong></p>
           <ul class="list-group">
             <li class="list-group-item">
               <!-- <label for="siteName">Enter Well Name:</label>
               <input type="text" placeholder="CROC 1H" id="siteName" /> -->
-              <select id='siteFilter' size=16 multiple>
-                <!-- <option value="" selected="selected" hidden="hidden">Choose here</option> -->
+              <select id='siteFilter'>
                  <option hidden value="default">Select An Option</option> 
               </select>
             </li>
-            <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
-  
+            <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Single Well Filter</button>
           </ul>
         </form>
-      </div> 
+        <div class="container-fluid pt-3"></div>
+        <form>
+          <p><strong>Multiple Well Select:</strong><br>Press Ctrl to select multiple options</p>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <select id='multiple-site-filter' size=16 multiple>
+              </select>
+            </li>
+            <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Multiple Well Filter</button>
+          </ul>
+        </form>
+      </div>
     </div>
   </div>
 </div>
 </div>
-  <script src="static/table.js"></script>
+<script src="static/table.js"></script>
 </body>
 </html>

@@ -39,13 +39,18 @@ function buildTable(tableData) {
 //FUNCTION TO CREATE DROP DOWN VALUES
 function createDropdownOptions() {
   //select dropdown <select> in well.html with id:"siteSelection"
-  var selector = d3.select("#siteFilter");
+  var singleSiteSelector = d3.select("#siteFilter");
+  var multipleSiteSelector = d3.select("#multiple-site-filter");
   //read in the wellNames.json file, which contains the array "names" with all the well names
   d3.json('./static/wellNames.json').then((data) => {
     // console.log(data);
   var wellOptions = data.names;
   wellOptions.forEach((well) => {
-    selector
+    singleSiteSelector
+      .append('option')
+      .text(well)
+      .property('Value', well);
+      multipleSiteSelector
       .append('option')
       .text(well)
       .property('Value', well);
@@ -55,9 +60,11 @@ function createDropdownOptions() {
 
 createDropdownOptions();
 
+//FUNCTION TO HANGLE SINGLE WELL SELECT FILTER
 function handleClick() {
   // the value entered in the sitename filter becomes the value for the siteName variable
   let requestedSiteName = d3.select("#siteFilter").property("value");
+  console.log(requestedSiteName);
   // set data be filtered to imported data (the data ready to be filtered)
   let filteredData = tableData;
   if (requestedSiteName) {
@@ -68,11 +75,37 @@ function handleClick() {
   buildTable(filteredData);
 };
 
+//FUNCTIN TO HANDLE MULTIPLE WELL SELECT FILTER
+function multipleWellSelected() {
+  let filteredData = tableData;
+  var options = document.getElementById('multiple-site-filter').selectedOptions;
+  var values = Array.from(options).map(({ value }) => value);
+  
+// FOR THE LENGTH OF VALUES?
+
+  console.log(values)
+  
+  values.forEach((well) => {
+    if(well) {
+      filteredData = filteredData.filter(
+        row => row[0] == well)
+      
+    }
+    console.log(well)
+  });
+  //build table using the filteredData variable
+  // USE VALUES ARRAY TO CREATE A FILTERES DATA?
+  buildTable(filteredData);
+};
+
 //build table as soon as page loads
 buildTable(tableData);
 
 //create listener for when user wants to filter data
 d3.selectAll('#siteFilter').on("change", handleClick);
+
+//create listener for when user wants to filter data
+d3.selectAll('#multiple-site-filter').on("change", multipleWellSelected);
 
 //FUCTION TO CLEAR FILTERED TABLE
 function clearTable(tableData){
