@@ -3,7 +3,7 @@
 //FUNCTION TO CREATE DROP DOWN VALUES
   function createDropdownOptions() {
     //select dropdown <select> in well.html with id:"siteSelection"
-    var selector = d3.select("#siteSelection");
+    var selector = d3.select("#multiple-site-selection");
     //read in the wellNames.json file, which contains the array "names" with all the well names
     d3.json('./static/wellNames.json').then((data) => {
       // console.log(data);
@@ -33,9 +33,13 @@ function curvesHome() {
     var site_date = [];
 
     new Promise ((resolve) => data.forEach(site => {if (site[0]==="Summary") {
-      {if (site[2]){ site_oil.push(site[2])}}
-      {if (site[3]){ site_gas.push(site[3])}}
-      {if (site[4]){ site_water.push(site[4])}}
+      site_oil.push(site[2]);
+      site_gas.push(site[3]);
+      site_water.push(site[4]);
+     
+      // {if (site[2]){ site_oil.push(site[2])}}
+      // {if (site[3]){ site_gas.push(site[3])}}
+      // {if (site[4]){ site_water.push(site[4])}}
         site_date.push(site[8]) 
     } resolve()}));
 
@@ -173,12 +177,9 @@ function curvesHome() {
 curvesHome();
 
 
-// LISTENER FOR CHANGE ON DROP DOWN MENU
-  d3.selectAll('body').on('change', updateCurves);
-
   //FUNCTION TO CHANGE CURVES BASED ON DROP DOWN SELECTION
   function updateCurves(){
-    var dropdownMenu = d3.selectAll("#siteSelection").node();
+    var dropdownMenu = d3.selectAll("#multiple-site-selection").node();
     var dropdownMenuID = dropdownMenu.id;
     var selectedOption = dropdownMenu.value;
     console.log(dropdownMenuID);
@@ -190,9 +191,9 @@ curvesHome();
       var site_date = [];
 
       new Promise ((resolve) => data.forEach(site => {if (site[0]===selectedOption) {
-        {if (site[2]){ site_oil.push(site[2])}}
-        {if (site[3]){ site_gas.push(site[3])}}
-        {if (site[4]){ site_water.push(site[4])}}
+        site_oil.push(site[2]);
+        site_gas.push(site[3]);
+        site_water.push(site[4]);
         site_date.push(site[8])
          resolve()}}));
 
@@ -269,7 +270,30 @@ curvesHome();
         };//close water layout
         //call water data & layout to plot
         Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
-      })};
+      })}
+
+
+      function multiWellFilter(){
+        let options = document.getElementById('multiple-site-filter').selectedOptions;
+        let values = Array.from(options).map(({ value }) => value);
+      
+        console.log(values);
+        let filteredData = tableData;
+        var requestedData = [];
+        console.log(filteredData);
+        values.forEach((well) => {
+          filteredData.forEach((row) => {
+            {if (well == row[0]){requestedData.push(row)}}
+          }  //CLOSE OF CODE BLOCK IN forEach ROW IN THE DATASET
+          ) //CLOSE OF forEach ROW IN THE DATASET
+          buildTable(requestedData); //BUILD TABLE WITH RequestedData ARRAY
+        values = ""; //CLEARING OUT VALUES 
+      })
+    };
+      
+      // LISTENER FOR CHANGE ON DROP DOWN MENU
+  d3.selectAll('body').on('change', updateCurves);
+      
   
       
 

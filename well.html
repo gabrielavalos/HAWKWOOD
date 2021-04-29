@@ -18,29 +18,24 @@
   <a class="navbar-brand" href="todaysImport.html">TODAY'S IMPORT</a>
   <a class="navbar-brand" href="well.html">CURVES</a>
 </nav>
-
-    
- 
-      <div class="container-fluid pt-5 pb-3">   
-        <select id="siteSelection" >
-        </select>
-      </div>
-      <div class="container-fluid">  
-        <!-- <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary active">curves</button>
-          <button type="button" class="btn btn-secondary">table</button>
-        </div> -->
-      </div>
+<!--CURVES AND FILTERS-->
+<div class="container-fluid pt-5 pb-3">
+  <div class="row"><br></div>
+  <div class="row">
+    <div class="col-md-1">
+      <select id="multiple-site-selection" size=17 multiple>
+        <option value="default" disabled>Select A Well</option> <!-- NEED TO HIGHLIGHT DEFAULT OPTION "SUMMARY"-->
+      </select>
+    </div>
+    <div class="col-md-11">
       <div id=oilDeclineCurve></div>
       <div id=gasDeclineCurve></div>
       <div id=waterDeclineCurve></div>
-
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>
-      <script src="static/all_production.json"></script>
-      <script src="static/curves.js"></script>
-      
-
-
-    
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>
+<script src="static/all_production.json"></script>
+<script src="static/curves.js"></script>   
 </body>
 </html>

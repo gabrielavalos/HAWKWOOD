@@ -39,17 +39,17 @@ function buildTable(tableData) {
 //FUNCTION TO CREATE DROP DOWN VALUES
 function createDropdownOptions() {
   //select dropdown <select> in well.html with id:"siteSelection"
-  var singleSiteSelector = d3.select("#siteFilter");
+  // var singleSiteSelector = d3.select("#siteFilter");
   var multipleSiteSelector = d3.select("#multiple-site-filter");
   //read in the wellNames.json file, which contains the array "names" with all the well names
   d3.json('./static/wellNames.json').then((data) => {
     // console.log(data);
   var wellOptions = data.names;
   wellOptions.forEach((well) => {
-    singleSiteSelector
-      .append('option')
-      .text(well)
-      .property('Value', well);
+    // singleSiteSelector
+    //   .append('option')
+    //   .text(well)
+    //   .property('Value', well);
       multipleSiteSelector
       .append('option')
       .text(well)
