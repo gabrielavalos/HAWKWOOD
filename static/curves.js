@@ -140,7 +140,9 @@ curvesHome();
       var requestedOil = [];
       var requestedGas = [];
       var requestedWater = [];
-      
+      var Oil = [];
+      var Gas = [];
+      var Water = [];
       
       var site_oil = [];
       var site_gas = [];
@@ -148,52 +150,33 @@ curvesHome();
       var site_date = [];
 
       values.forEach((well) => {
-        var tempArray = []
+        Oil[well] = [];
+        Gas[well] = [];
+        Water[well] = [];
         new Promise ((resolve) => data.forEach(site => {
-          if (well == site[0])
-          
-          
-           {
-            // let sum = 0;
-            // let nums = []
-           
-            // for (let i = 0; i < array1.length; i++){
-            //     sum = array1[i] + array2[i];
-            //     nums.push(sum)
-            //   }
-           
-            // return nums
-
-
-            requestedOil.push(site[2]); 
-            requestedOil
-            // I NEED TO CREATE AN ARRAY FOR EVERY VALUE?
-            //requestedOil = requestedOil PLUS SITE
+          if(well == site[0]) {
+            Oil[well].push(site[2]) 
+            Gas[well].push(site[3])
+            Water[well].push(site[4])
+            site_date.push(site[8]) }
+            resolve()}
+            ));
+            // ADD THEM HERE?
+            //requestedOil = Oil[well].forEach((productionPoint) => productionPoint + productionPoint);
+          console.log(requestedOil);
             
-            //console.log("print how many times") //PRINTER FOR EACH data...BECAUSE I AM IN THE DATA forEach
-              //requestedOil.push(values.forEach((well) => site[2] + site[2]))
-              //requestedOil = requestedOil + site[2]
-              //values.forEach((well) => requestedOil.push(site[2] + site[2]));
-              //console.log(site);
-              //requestedOil = Array.from(requestedOil + [site[2]]);
-          
-              //requestedOil.push(site[2]); //CREATES A SINGLE ARRAY, NEED TO ADD HERE 
-              // Total.push(Array1[i]+Array2[i]);
-
+          console.log(Oil[well]);
+          console.log(Gas[well]);
+          console.log(Water[well]);
             
-
-              site_oil.push(site[2]);
-              requestedWater.push(site[4]);
-              site_date.push(site[8])
-              resolve()
-            }}));
           });
-          console.log(requestedOil); // I GOT UNDEFINED 
-          console.log(requestedOil.length);
-          console.log(typeof requestedOil)
-          //console.log(requestedGas);
-          //console.log(requestedWater);
-          console.log(site_oil);
+        //   console.log(requestedOil); // I GOT UNDEFINED 
+        //  // console.log(requestedOil.length);
+        //   console.log(typeof requestedOil)
+        //   console.log(typeof requestedOil)
+        //   //console.log(requestedGas);
+        //   //console.log(requestedWater);
+          
          
 
           //// CODE TO ADD PRODUCTION FROM SELECTED WELLS ////
