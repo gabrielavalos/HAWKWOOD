@@ -20,17 +20,21 @@ function curvesHome() {
     var site_oil = [];
     var site_gas = [];
     var site_water = [];
-    var site_date = [];
+    summarySiteDate = [];
 
     new Promise ((resolve) => data.forEach(site => {if (site[0]==="Summary") {
       site_oil.push(site[2]);
       site_gas.push(site[3]);
       site_water.push(site[4]);
-      site_date.push(site[8]);
+      summarySiteDate.push(site[8]);
     } resolve()}));
+    //console.log(site_oil); //1069
+    //console.log(site_gas);
+    //console.log(site_water);
+    //console.log(summarySiteDate);
     
     //CALL FUNCTION TO CREATE DROPDOWN MENU VALUES
-    var mostRecentEntry = site_date[0]; //MOST RECENT DATE WITHOUT HOUR AS VARIABLE
+    var mostRecentEntry = summarySiteDate[0]; //MOST RECENT DATE WITHOUT HOUR AS VARIABLE
     var addingHours = "T00:00"; //HOURS TO ADD TO MOST RECENT DATE - NEEDED TO NORMALIZE FROM ORIGINAL 19 HOUR FORMAT
     var nextYear = mostRecentEntry.concat(addingHours); //DATE AND HOUR AS SINGLE VARIABLE TO MAKE INTO DATE
 
@@ -45,7 +49,7 @@ function curvesHome() {
     console.log(`${nextYearGraph} is a year from the most recent production date. This is from curvesHome()`);
       
     var dataOil = [{
-      x: site_date,
+      x: summarySiteDate,
       y: site_oil,
       type: "line",
       line:
@@ -59,14 +63,14 @@ function curvesHome() {
       },
       xaxis: {
         autorange: false,
-        range: [site_date[site_date.length-1], nextYearGraph]
+        range: [summarySiteDate[summarySiteDate.length-1], nextYearGraph]
       }
     };
     Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil); 
     
     // gas decline curve data
     var dataGas = [{
-      x: site_date,
+      x: summarySiteDate,
       y: site_gas,
       type: "line",
       line: {color: "red"} 
@@ -79,14 +83,14 @@ function curvesHome() {
         },
       xaxis: {
         autorange: false,
-        range: [site_date[site_date.length-1], nextYearGraph]
+        range: [summarySiteDate[summarySiteDate.length-1], nextYearGraph]
         }
       }; 
       Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas); 
   
     // water decline curve data
     var dataWater = [{
-      x: site_date,
+      x: summarySiteDate,
       y: site_water,
       type: "line" }
     ]; 
@@ -98,7 +102,7 @@ function curvesHome() {
         },
       xaxis: {
         autorange: false,
-        range: [site_date[site_date.length-1], nextYearGraph]
+        range: [summarySiteDate[summarySiteDate.length-1], nextYearGraph]
         }
       };
     Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
@@ -137,10 +141,11 @@ curvesHome();
     console.log(values);
 
     d3.json("./static/all_production.json").then((data) =>{
-      var requestedOil = [];
-      var requestedGas = [];
+      requestedOil = new Array(summarySiteDate.length + 6); //1069
+      //console.log(requestedOil);
+      //requestedGas = [];
       var requestedWater = [];
-      var Oil = [];
+      var Oil = []; 
       var Gas = [];
       var Water = [];
       
@@ -150,26 +155,37 @@ curvesHome();
       var site_date = [];
 
       values.forEach((well) => {
+        console.log(well)
         Oil[well] = [];
         Gas[well] = [];
         Water[well] = [];
+        
         new Promise ((resolve) => data.forEach(site => {
-          if(well == site[0]) {
-            Oil[well].push(site[2]) 
+          if(well == site[0]){
+            
+            Oil[well].push(site[2])
+            //requestedOil = Oil[well].map(x => x) // PASSED TO OIL VARIABLE THAT WILL BE USED TO BUILD CURVE, BUT SHOULD BE ADDED TO IT
+            //requestedOil = Oil[well].values() + requestedOil.values()
+            
             Gas[well].push(site[3])
             Water[well].push(site[4])
-            site_date.push(site[8]) }
+            site_date.push(site[8])}
+            //requestedOil = Oil[well].values() + requestedOil.values()
+
             resolve()}
             ));
-            // ADD THEM HERE?
-            //requestedOil = Oil[well].forEach((productionPoint) => productionPoint + productionPoint);
-          console.log(requestedOil);
-            
-          console.log(Oil[well]);
-          console.log(Gas[well]);
-          console.log(Water[well]);
+          
+          console.log(typeof Oil[well])
+         // requestedOil = Oil[well].values() + requestedOil.values()
+          console.log(typeof requestedOil);
+          //console.log(Oil[well]);
+          //console.log(Gas[well]);
+         // console.log(Water[well]);
+         
             
           });
+         
+          
         //   console.log(requestedOil); // I GOT UNDEFINED 
         //  // console.log(requestedOil.length);
         //   console.log(typeof requestedOil)
