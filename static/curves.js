@@ -47,7 +47,7 @@ function curvesHome() {
 
     nextYearGraph = `${nextYear}-${nextMonth}-${nextDate}`; // CREATE FULL DATE FOR NEXT YEAR IN RIGHT FORMAT FOR AXIS
     console.log(`${nextYearGraph} is a year from the most recent production date. This is from curvesHome()`);
-      
+
     var dataOil = [{
       x: summarySiteDate,
       y: site_oil,
@@ -134,6 +134,8 @@ curvesHome();
 
   //      //OIL CURVE////
 
+  function addArrays(){};
+
   //FUNCTION TO CHANGE CURVES BASED ON DROP DOWN SELECTION
   function updateCurves(){
     var dropdownMenu = document.getElementById("multiple-site-selection").selectedOptions;
@@ -141,19 +143,17 @@ curvesHome();
     console.log(values);
 
     d3.json("./static/all_production.json").then((data) =>{
-      requestedOil = new Array(summarySiteDate.length + 6); //1069
-      //console.log(requestedOil);
-      //requestedGas = [];
-      var requestedWater = [];
+      
+      var requestedOil = []
+      var requestedGas = [] 
+      var requestedWater = []
+      var site_date = [];
+      
+      //requestedOil = new Array(summarySiteDate.length + 6); //1069
       var Oil = []; 
       var Gas = [];
       var Water = [];
-      
-      var site_oil = [];
-      var site_gas = [];
-      var site_water = [];
-      var site_date = [];
-
+    
       values.forEach((well) => {
         console.log(well)
         Oil[well] = [];
@@ -161,26 +161,37 @@ curvesHome();
         Water[well] = [];
         
         new Promise ((resolve) => data.forEach(site => {
-          if(well == site[0]){
-            
+          if(values.length == 1 && well == site[0]){
+            requestedOil.push(site[2])
+            requestedGas.push(site[3])
+            requestedWater.push(site[4])
+            site_date.push(site[8])}
+          else if(values.length > 1 && well == site[0]){
             Oil[well].push(site[2])
-            //requestedOil = Oil[well].map(x => x) // PASSED TO OIL VARIABLE THAT WILL BE USED TO BUILD CURVE, BUT SHOULD BE ADDED TO IT
-            //requestedOil = Oil[well].values() + requestedOil.values()
-            
             Gas[well].push(site[3])
             Water[well].push(site[4])
             site_date.push(site[8])}
-            //requestedOil = Oil[well].values() + requestedOil.values()
 
-            resolve()}
-            ));
+            //requestedOil = Oil[well].map(x => x) // PASSED TO OIL VARIABLE THAT WILL BE USED TO BUILD CURVE, BUT SHOULD BE ADDED TO IT
+            //requestedOil = Oil[well].values() + requestedOil.values()
+            //requestedOil = Oil[well].values() + requestedOil.values()
+            resolve()
+            //console.log(Oil[well])}
+          }));
           
-          console.log(typeof Oil[well])
+          //console.log(Oil[well])
          // requestedOil = Oil[well].values() + requestedOil.values()
-          console.log(typeof requestedOil);
+          //console.log(typeof requestedOil);
+          //console.log(requestedOil);
           //console.log(Oil[well]);
           //console.log(Gas[well]);
          // console.log(Water[well]);
+         for (i of Oil[well]) { requestedOil = Oil[well]}
+         // ADD THEM HERE??
+         console.log(Oil[well]);
+         requestedOil.push(Oil[well])
+         console.log(requestedOil)
+         
          
             
           });
@@ -201,7 +212,7 @@ curvesHome();
           //// OIL CURVE ////
           var dataOil = [{
           x: site_date,
-          y: site_oil,
+          y: requestedOil,
         type: "line",
         line: 
           {color: "green"}
@@ -222,7 +233,7 @@ curvesHome();
         //// GAS CURVE ////
         var dataGas = [{
           x: site_date,
-          y: site_gas,
+          y: requestedGas,
           type: "line",
           line: 
           {color: "red"} }]; 
@@ -242,7 +253,7 @@ curvesHome();
         //// WATER CURVE ////
         var dataWater = [{
           x: site_date,
-          y: site_water,
+          y: requestedWater,
           type: "line" }]; 
         var layoutWater = {
           title: "Water BBL",
