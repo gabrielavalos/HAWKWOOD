@@ -134,6 +134,7 @@ curvesHome();
 
   //      //OIL CURVE////
 
+
   
 
   //FUNCTION TO CHANGE CURVES BASED ON DROP DOWN SELECTION
@@ -141,6 +142,12 @@ curvesHome();
     var dropdownMenu = document.getElementById("multiple-site-selection").selectedOptions;
     var values = Array.from(dropdownMenu).map(({ value }) => value);
     console.log(values);
+
+    d3.json('./static/wellNames.json').then((data) => { //read in the wellNames.json file, which contains the array "names" with all the well names
+      wellOptions = data.names;
+      forSelection = wellOptions.map((x) => ({id:x}))
+      console.log(forSelection);
+    })
 
     d3.json("./static/all_production.json").then((data) =>{
       
@@ -161,21 +168,39 @@ curvesHome();
         Water[well] = [];
         
         new Promise ((resolve) => data.forEach(site => {
-          if(values.length == 1 && well == site[0]){
-            requestedOil.push(site[2])
-            requestedGas.push(site[3])
-            requestedWater.push(site[4])
-            site_date.push(site[8])}
-          else if(values.length > 1 && well == site[0]){
+           if(values.length == 1 && well == site[0]){
+             indexSum = (a1, a2) => a1.map((v, i) => v + a2[i])
+            //  requestedOil.push(site[2])
+            //  requestedGas.push(site[3])
+            //  requestedWater.push(site[4])
+
             Oil[well].push(site[2])
-            indexSum = (a1, a2) => a1.map((v, i) => v + a2[i]),
-            requestedOil = indexSum(Oil[well], requestedOil)
+            Gas[well].push(site[3])
+            Water[well].push(site[4])
+
+              requestedOil = indexSum(Oil[well], requestedOil) ///////////// MY PROBLEM IS THE WAY I AM NAMING MY VARIABLES...NEED TO CONVERT wellNames to dictionary??
+             requestedGas = indexSum(Gas[well], requestedGas)
+             requestedWater = indexSum(Water[well], requestedWater)
+ 
+            site_date.push(site[8])
+          }
+          else if(values.length > 1 && well == site[0])
+          {
+            // Oil[well].push(site[2])
+            // indexSum = (a1, a2) => a1.map((v, i) => v + a2[i]),
+            // requestedOil = indexSum(Oil[well], requestedOil)
+            Gas[well].push(site[3])
+            requestedGas = indexSum(Gas[well], requestedGas)
+            Water[well].push(site[4])
+            requestedWater = indexSum(Water[well], requestedWater)
+            site_date.push(site[8])
 
 
             
-            Gas[well].push(site[3])
-            Water[well].push(site[4])
-            site_date.push(site[8])}
+          //   Gas[well].push(site[3])
+          //   Water[well].push(site[4])
+          //   site_date.push(site[8])
+          }
 
             //requestedOil = Oil[well].map(x => x) // PASSED TO OIL VARIABLE THAT WILL BE USED TO BUILD CURVE, BUT SHOULD BE ADDED TO IT
             //requestedOil = Oil[well].values() + requestedOil.values()
@@ -184,6 +209,8 @@ curvesHome();
             //console.log(Oil[well])}
           }));
           console.log(requestedOil)
+          console.log(requestedGas)
+          console.log(requestedWater)
           //console.log(Oil[well])
          // requestedOil = Oil[well].values() + requestedOil.values()
           //console.log(typeof requestedOil);
@@ -191,11 +218,13 @@ curvesHome();
           //console.log(Oil[well]);
           //console.log(Gas[well]);
          // console.log(Water[well]);
-         for (i of Oil[well]) { requestedOil = Oil[well]}
+         //for (i of Oil[well]) { requestedOil = Oil[well]}
          // ADD THEM HERE??
-         console.log(Oil[well]);
-         requestedOil.push(Oil[well])
+        // console.log(Oil[well]);
+         //requestedOil.push(Oil[well])
          console.log(requestedOil)
+         console.log(requestedGas)
+          console.log(requestedWater)
          
          
          
