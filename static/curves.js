@@ -134,7 +134,7 @@ curvesHome();
 
   //      //OIL CURVE////
 
-  function addArrays(){};
+  
 
   //FUNCTION TO CHANGE CURVES BASED ON DROP DOWN SELECTION
   function updateCurves(){
@@ -168,6 +168,11 @@ curvesHome();
             site_date.push(site[8])}
           else if(values.length > 1 && well == site[0]){
             Oil[well].push(site[2])
+            indexSum = (a1, a2) => a1.map((v, i) => v + a2[i]),
+            requestedOil = indexSum(Oil[well], requestedOil)
+
+
+            
             Gas[well].push(site[3])
             Water[well].push(site[4])
             site_date.push(site[8])}
@@ -175,10 +180,10 @@ curvesHome();
             //requestedOil = Oil[well].map(x => x) // PASSED TO OIL VARIABLE THAT WILL BE USED TO BUILD CURVE, BUT SHOULD BE ADDED TO IT
             //requestedOil = Oil[well].values() + requestedOil.values()
             //requestedOil = Oil[well].values() + requestedOil.values()
-            resolve()
+            resolve() 
             //console.log(Oil[well])}
           }));
-          
+          console.log(requestedOil)
           //console.log(Oil[well])
          // requestedOil = Oil[well].values() + requestedOil.values()
           //console.log(typeof requestedOil);
@@ -191,6 +196,7 @@ curvesHome();
          console.log(Oil[well]);
          requestedOil.push(Oil[well])
          console.log(requestedOil)
+         
          
          
             
