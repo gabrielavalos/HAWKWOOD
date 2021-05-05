@@ -110,6 +110,7 @@ function updateCurves(){
       var Oil = [];
       var Gas = [];
       var Water = [];
+      var test = []
       
       values.forEach((well) => {
           forSelection.forEach((pair) => {
@@ -123,9 +124,10 @@ function updateCurves(){
                           requestedGas.push(site[3]);
                           requestedWater.push(site[4]);
                           site_date.push(site[8])}
-                      else if(values.length > 1 && well == site[0]){
-                          indexSum = (a1, a2) => a1.map((v, i) => i + a2[v]);
+                      else if(values.length > 1 && well == site[0]){ //this is where i need help, i need to sum all the oil[well] arrays to pupolate the requestedOil array
+                          indexSum = (a1, a2) => a1.map((v, i) => v + a2[i]);
                           Oil[well].push(site[2])
+                          test = indexSum([1,2, 3], [4, 5, 6])
                           requestedOil = indexSum(Oil[well], requestedOil);
                           Gas[well].push(site[3])
                           requestedGas = indexSum(Gas[well], requestedGas);
@@ -136,14 +138,13 @@ function updateCurves(){
                           resolve()}))//PROMISE CLOSED
                       } //IF CLOSED
                   })//forSelection (dic containing names of well selected) closed
-                  console.log(Oil[well]);
-                  console.log(requestedOil);
               }); //values.forEach closed
 
 
         //// CODE TO ADD PRODUCTION FROM SELECTED WELLS ////
+        console.log(test)
+        console.log(requestedOil)
         console.log(`${nextYearGraph} is a year from the most recent production date`);
-        //console.log(requestedOil);
         //// OIL CURVE ////
         var dataOil = [{
           x: site_date,
