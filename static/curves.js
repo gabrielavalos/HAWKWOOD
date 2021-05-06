@@ -138,38 +138,6 @@ function updateCurves(){
       requestedWater = site_date.map(date => Water[date]);
 
 
-      // values.forEach((well) => {
-      //     forSelection.forEach((pair) => {
-      //         if(well == Object.values(pair)){
-      //             Oil[well] = new Array();
-      //             Gas[well] = new Array();
-      //             Water[well] = new Array();
-      //             new Promise ((resolve) => data.forEach((site) => {
-      //                 if (well === site[0]) {
-      //                   requestedOil
-      //                 }
-      //                 // if(values.length == 1 && well == site[0]){
-      //                 //     requestedOil.push(site[2]);
-      //                 //     requestedGas.push(site[3]);
-      //                 //     requestedWater.push(site[4]);
-      //                 //     site_date.push(site[8])}
-      //                 // else if(values.length > 1 && well == site[0]){ //this is where i need help, i need to sum all the oil[well] arrays to pupolate the requestedOil array
-      //                 //     indexSum = (a1, a2) => a1.map((v, i) => v + a2[i]);
-      //                 //     Oil[well].push(site[2])
-      //                 //     test = indexSum([1,2, 3], [4, 5, 6])
-      //                 //     requestedOil = indexSum(Oil[well], requestedOil);
-      //                 //     Gas[well].push(site[3])
-      //                 //     requestedGas = indexSum(Gas[well], requestedGas);
-      //                 //     Water[well].push(site[4])
-      //                 //     requestedWater = indexSum(Water[well], requestedWater);
-      //                 //     site_date.push(site[8])}
-      //                 else{}
-      //                     resolve()}))//PROMISE CLOSED
-      //                 } //IF CLOSED
-      //             })//forSelection (dic containing names of well selected) closed
-      //         }); //values.forEach closed
-
-
         //// CODE TO ADD PRODUCTION FROM SELECTED WELLS ////
         console.log(test)
         console.log(requestedOil)
