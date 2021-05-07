@@ -20,12 +20,12 @@ function curvesHome() {
       var site_water = [];
       summarySiteDate = [];
 
-      new Promise ((resolve) => data.forEach(site => {if (site[0]==="Summary") {
+       data.forEach(site => {if (site[0]==="Summary") {
           site_oil.push(site[2]);
           site_gas.push(site[3]);
           site_water.push(site[4]);
           summarySiteDate.push(site[8])}
-          resolve()}));
+          });
 
           var mostRecentEntry = summarySiteDate[0]; //MOST RECENT DATE WITHOUT HOUR AS VARIABLE
           var addingHours = "T00:00"; //HOURS TO ADD TO MOST RECENT DATE - NEEDED TO NORMALIZE FROM ORIGINAL 19 HOUR FORMAT
@@ -101,7 +101,6 @@ function updateCurves(){
   d3.json('./static/wellNames.json').then((wellName) => { //read in the wellNames.json file, which contains the array "names" with all the well names
     wellOptions = wellName.names;
     forSelection = wellOptions.map((x) => ({id:x}))
-    console.log(forSelection);
 
   d3.json("./static/all_production.json").then((data) =>{
       var requestedOil = [];
@@ -112,7 +111,7 @@ function updateCurves(){
       var Oil = {};
       var Gas = {};
       var Water = {};
-      var test = [];
+    
 
       data.forEach((site) => {
         if (values.includes(site[0])) {
@@ -139,8 +138,6 @@ function updateCurves(){
 
 
         //// CODE TO ADD PRODUCTION FROM SELECTED WELLS ////
-        console.log(test)
-        console.log(requestedOil)
         console.log(`${nextYearGraph} is a year from the most recent production date`);
         //// OIL CURVE ////
         var dataOil = [{
