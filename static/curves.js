@@ -78,7 +78,7 @@ function curvesHome() {
               y: site_water,
               type: "line" }];
           var layoutWater = {
-              title: "Water BBL",
+              title:  "Water BBL", //add each well name to title 
               yaxis: {
                   type: 'log',
                   autorange: true},
