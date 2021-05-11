@@ -26,45 +26,41 @@
   <a class="navbar-brand"><h2>HAWKWOOD</h2></a>
   <a class="navbar-brand" href="todaysImport.html">TODAY'S IMPORT</a>
   <a class="navbar-brand" href="curves.html">GROSS</a>
-  <a class="navbar-brand" href="curves.html">PARTNER NET</a>
+  <a class="navbar-brand" href="net_partners.html">PARTNER NET</a>
 </nav>
 <body>
     <div class="container-fluid pt-5 pb-3">
         <div class="row"><br></div>
         <div class="row">
+        <div class="col-md-2">
+            <h6>Select Partner</h6>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <select id="partner-name" size=3></select>
+                </li>
+                <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
+            </ul>
+        </div>
         <div class="col-md-1">
             <h6>Select Wells</h6>
             <ul class="list-group">
-              <li class="list-group-item">
-                <select id="well-partners" multiple size=15>
-                </select>
-              </li>
-              <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
+                <li class="list-group-item">
+                    <select id="well-options" multiple size=10></select>
+                </li>
+                <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
             </ul>
-          </div>
         </div>
-        <div class="row"></div>
-          <div class="col-md-1">
-            <h6>Select Name</h6>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <select id="partner-name" multiple multiple size=15>
-                </select>
-              </li>
-              <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
-            </ul>
-          </div>
+        </div>
+    <div class="row">
+    <div class="col-md-10">
+        <h1>Curves Go Here:</h1>
+        <div id=oilDeclineCurve></div>
+        <div id=gasDeclineCurve></div>
+        <div id=waterDeclineCurve></div>
     </div>
-          <div class="row"></div>
-          <div class="col-md-10">
-            <div id=oilDeclineCurve></div>
-            <div id=gasDeclineCurve></div>
-            <div id=waterDeclineCurve></div>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>
+    <script src="static/partner_list.json"></script>
     <script src="static/net_interests.json"></script>
     <script src="static/net_partners.js"></script>
 </body>
