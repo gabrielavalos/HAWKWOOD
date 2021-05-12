@@ -40,7 +40,7 @@ function createWellOptions() {
             .property('Value', well);
         });
 
-        document.getElementById("well-options").size = wellOptions.length;
+         document.getElementById("well-options").size = wellOptions.length;
     })
 
      
@@ -49,36 +49,9 @@ function createWellOptions() {
 
 }; //END OF createOptions() 
 
-createWellOptions()
 
-d3.selectAll('body').on('change', createWellOptions);
+d3.select("#partner-name").on('change', createWellOptions);
 
 function clearWellOptions(){
     document.getElementById("well-options").options.length = 0
 };
-
-
-
-// function createWellOptions() {
-//     var wellSelector = d3.select("#well-options");
-
-//     var dropdownMenu = document.getElementById("partner-name").selectedOptions;
-//     values = Array.from(dropdownMenu).map(({ value }) => value);
-//     console.log(values);
-
-
-    
-
-//     d3.json('./static/wellNames.json').then((data) => { //read in the wellNames.json file, which contains the array "names" with all the well names
-//         var wellOptions = data.names.slice(1);
-//         //console.log(wellOptions)
-//         wellOptions.forEach((well) => {
-//             wellSelector
-//             .append('option')
-//             .text(well)
-//             .property('Value', well);
-//         })
-//     })
-// }; //END OF createOptions() 
-
-// createWellOptions()
