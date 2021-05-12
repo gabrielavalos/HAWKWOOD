@@ -10,23 +10,11 @@ function createPartnerOptions() {
             .text(partner)
             .property('Value', partner);
         })
+        document.getElementById("partner-name").size = partnerOptions.length
     })
 }; //END OF createOptions() 
 
-// function createPartnerOptions() {
-//     var partnerSelector = d3.select("#partner-name");
 
-//     d3.json('./static/partner_dict.json').then((partnerData) => { //read in the wellNames.json file, which contains the array "names" with all the well names
-//         var partnerOptions = partnerData.data;
-//         console.log(partnerOptions)
-//         partnerOptions.forEach((partner) => {
-//             partnerSelector
-//             .append('option')
-//             .text(partner[1])
-//             .property('Value', partner[1]);
-//         })
-//     })
-// }; //END OF createOptions() 
 
 createPartnerOptions()
 
@@ -51,9 +39,14 @@ function createWellOptions() {
             .text(well)
             .property('Value', well);
         });
+
+        document.getElementById("well-options").size = wellOptions.length;
     })
 
+     
     document.getElementById("partner-name").addEventListener("change", clearWellOptions)
+    
+
 }; //END OF createOptions() 
 
 createWellOptions()

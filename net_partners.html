@@ -18,8 +18,12 @@
     />
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="jquery.js"></script>
   </head>
 <body>
+    
+  
+  
   <div class="wrapper">
 <!--NAVIGATION BAR TO TOGGLE BETWEEN TABLE IMPORT AND SITE CURVES/TABLE-->
 <nav class="navbar navbar-expand-lg fixed-top">
@@ -45,7 +49,7 @@
             <h6>Select Wells</h6>
             <ul class="list-group">
                 <li class="list-group-item">
-                    <select id="well-options" multiple size=10></select>
+                    <select id="well-options" multiple></select>
                 </li>
                 <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
             </ul>
@@ -63,5 +67,6 @@
     <script src="static/partner_list.json"></script>
     <script src="static/net_interests.json"></script>
     <script src="static/net_partners.js"></script>
+
 </body>
 </html>
