@@ -53,22 +53,16 @@ function createWellOptions() {
         });
     })
 
-    document.getElementById("partner-name").addEventListener("change")
+    document.getElementById("partner-name").addEventListener("change", clearWellOptions)
 }; //END OF createOptions() 
 
 createWellOptions()
 
 d3.selectAll('body').on('change', createWellOptions);
 
-
-
-
-
-
-
-
-
-
+function clearWellOptions(){
+    document.getElementById("well-options").options.length = 0
+};
 
 
 
