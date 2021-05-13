@@ -40,7 +40,9 @@
             <h6>Select Partner</h6>
             <ul class="list-group">
                 <li class="list-group-item">
-                    <select id="partner-name"></select>
+                    <select id="partner-name">
+                        <option value="default">PATNERS</option> 
+                    </select>
                 </li>
                 <!-- <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button> -->
             </ul>
@@ -49,18 +51,18 @@
             <h6>Select Wells</h6>
             <ul class="list-group">
                 <li class="list-group-item">
-                    <select id="well-options" multiple></select>
+                    <select id="well-options" multiple></select>  <!--  TRY TO REMOVE MULTIPLE WITHOUT LOSING PARTNERS THAT ONLY HAVE ONE WEL, i.e. DARLA, GALAH NOT POPULATING -->
                 </li>
-                <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button>
+                <!-- <button id="clear-filter-btn" type="button" class="btn btn-primary">Clear Filter</button> -->
             </ul>
         </div>
         </div>
     <div class="row">
     <div class="col-md-12">
-        <h1>Curves Go Here:</h1>
+        <h1>Curves:</h1>
         <div id=oilDeclineCurve></div>
         <div id=gasDeclineCurve></div>
-        <div id=waterDeclineCurve></div>
+        <!-- <div id=waterDeclineCurve></div> -->
     </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>

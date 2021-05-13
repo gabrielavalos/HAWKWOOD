@@ -1,8 +1,8 @@
 function createPartnerOptions() {
-    var partnerSelector = d3.select("#partner-name");
+    var partnerSelector = d3.select("#partner-name"); //SELECT <select> WHERE PARTNER NAMES WILL APPEAR
 
-    d3.json('./static/partner_list.json').then((partnerData) => { //read in the wellNames.json file, which contains the array "names" with all the well names
-        var partnerOptions = partnerData;
+    d3.json('./static/partner_list.json').then((partnerOptions) => { //READ IN JSON FILE COINTAING ALL PARTNER'S NAMES
+        //var partnerOptions = partnerData; 
         //console.log(partnerOptions)
         partnerOptions.forEach((partner) => {
             partnerSelector
@@ -43,15 +43,9 @@ function createWellOptions() {
          document.getElementById("well-options").size = wellOptions.length;
          d3.select("#well-options").on('change', createPartnerNetCurves);
     })
-
-    
-     
     document.getElementById("partner-name").addEventListener("change", clearWellOptions)
-    
-    
-
+    document.getElementById("partner-name").addEventListener("change", clearCurves)
 }; //END OF createOptions() 
-
 
 d3.select("#partner-name").on('change', createWellOptions);
 
@@ -59,27 +53,34 @@ function clearWellOptions(){
     document.getElementById("well-options").options.length = 0
 };
 
-
 function createPartnerNetCurves() {
-    
     var dropdownMenu = document.getElementById("well-options").selectedOptions;
-    values = Array.from(dropdownMenu).map(({ value }) => value);
-    console.log(typeof values);
+    wellSelected = Array.from(dropdownMenu).map(({ value }) => value);
+    console.log(wellSelected);
 
     d3.json("./static/all_production.json").then((data) =>{
-        var site_oil = [];
-        var site_gas = [];
-        var site_water = [];
-        summarySiteDate = [];
-  
-         data.forEach(site => {if (site[0] == values[0]) {
-            site_oil.push(site[2]);
-            site_gas.push(site[3]);
-            site_water.push(site[4]);
+        d3.json("./static/net_interests.json").then((interestData) => { 
+            var site_oil = [];
+            var site_gas = [];
+            // var site_water = [];
+            summarySiteDate = [];
+            var interestOwned = 0
+            // var interestOwned = .1 //USED FOR TESTING
+            
+            interestData.forEach((partner) => { if (wellSelected[0] === partner[1] && values[0] === partner[3]){
+                 interestOwned = partner[4] //COMMENT OUT FOR TESTING
+            }})
+            console.log(interestOwned);
+            
+            data.forEach(site => {if (site[0] === wellSelected[0]) {
+            site_oil.push(site[2] * parseFloat(interestOwned));
+            site_gas.push(site[3] * parseFloat(interestOwned));
+            // site_water.push(site[4]);
             summarySiteDate.push(site[8])}
             });
-  
+            
             var mostRecentEntry = summarySiteDate[0]; //MOST RECENT DATE WITHOUT HOUR AS VARIABLE
+            console.log(mostRecentEntry);
             var addingHours = "T00:00"; //HOURS TO ADD TO MOST RECENT DATE - NEEDED TO NORMALIZE FROM ORIGINAL 19 HOUR FORMAT
             var nextYear = mostRecentEntry.concat(addingHours); //DATE AND HOUR AS SINGLE VARIABLE TO MAKE INTO DATE
   
@@ -125,23 +126,41 @@ function createPartnerNetCurves() {
                     range: [summarySiteDate[summarySiteDate.length-1], nextYearGraph]}};
             Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
   
-            var dataWater = [{
-                x: summarySiteDate,
-                y: site_water,
-                type: "line" }];
-            var layoutWater = {
-                title:  "Water BBL", //add each well name to title 
-                yaxis: {
-                    type: 'log',
-                    autorange: true},
-                xaxis: {
-                    autorange: false,
-                    range: [summarySiteDate[summarySiteDate.length-1], nextYearGraph]}};
-            Plotly.newPlot("waterDeclineCurve", dataWater, layoutWater);
         })
-        
-
+    })
 };
+
+function clearCurves(){ //MAKE THIS INTO DISAPPEARING THE CURVES?
+    var site_oil = [];
+    var site_gas = [];
+    summarySiteDate = [];
+    
+    var dataOil = [{
+        x: summarySiteDate,
+        y: site_oil,
+        type: "line",
+        line:
+            {color: "green"}}];
+    var layoutOil = {
+        title: "Oil BBL",
+        yaxis: {
+            type: 'log'}};
+        Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
+
+
+    var dataGas = [{
+        x: summarySiteDate,            
+        y: site_gas,
+        type: "line",
+        line:
+            {color: "red"}}];
+    var layoutGas = {
+        title: "Gas BBL",
+        yaxis: {
+            type: 'log'}};
+    Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
+};
+
 
 
 
