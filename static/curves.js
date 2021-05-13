@@ -100,7 +100,7 @@ function updateCurves(){
 
   d3.json('./static/wellNames.json').then((wellName) => { //read in the wellNames.json file, which contains the array "names" with all the well names
     wellOptions = wellName.names;
-    forSelection = wellOptions.map((x) => ({id:x}))
+    
 
   d3.json("./static/all_production.json").then((data) =>{
       var requestedOil = [];
