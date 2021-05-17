@@ -118,6 +118,7 @@ function updateCurves(){
           Oil[site[8]] = Oil.hasOwnProperty(site[8])
             ? Oil[site[8]] + parseFloat(site[2])
             : parseFloat(site[2]);
+            
           Gas[site[8]] = Gas.hasOwnProperty(site[8])
             ? Gas[site[8]] + parseFloat(site[3])
             : parseFloat(site[3]);
