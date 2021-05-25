@@ -115,7 +115,7 @@ function updateCurves(){
 
       data.forEach((site) => {
         if (values.includes(site[0])) {
-          Oil[site[8]] = Oil.hasOwnProperty(site[8])
+          Oil[site[8]] = Oil.hasOwnProperty(site[8]) //hasOwnProperty returns True or False
             ? Oil[site[8]] + parseFloat(site[2])
             : parseFloat(site[2]);
             

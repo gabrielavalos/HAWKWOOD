@@ -17,22 +17,22 @@ function createPartnerOptions() {
 createPartnerOptions() //CALL FUNCTION TO CREATE PARTNER'S NAME AS SOON AS THE PAGE LOADS
 
 function createWellOptions() {
-    var wellSelector = d3.select("#well-options"); //SELECT TJE "well-options" <select>
-    wellPartnerInterest = [];
-    var interestOwned = 0;
+    var wellSelector = d3.select("#well-options"); //SELECT THE "well-options" <select>
+    wellPartnerInterest = []; //PARTNER'S INTERESTS
+    var interestOwned = 0; //THIS IS WHAT EACH DAY PRODUCTION POINT WILL BE MULTIPLIED BY
 
-    var partnersWellAndInterest = {} //WILL CONTAIN THE WELL AND THE INTEREST FOR THE REQUESTED PARTNER
+    var partnersWellAndInterest = {} //WILL CONTAIN THE WELL(S) AND CORRESPONDING INTERESTS FOR THE SELECTED PARTNER
     
 
     var dropdownMenu = document.getElementById("partner-name").selectedOptions; //MAKE SELECTED PARTNER NAME INTO A var
-    values = Array.from(dropdownMenu).map(({ value }) => value); //MAKE SELECTED PARTNER INTO AN ARRAY
-    console.log(values);
+    values = Array.from(dropdownMenu).map(({ value }) => value); //SELECTED PARTNER INTO ARRAY
+    console.log(values); //SELECTED PARTNER 
     wellOptions = new Array //EMPTY ARRAY WHERE PARTNER'S WELLS WILL BE PUSHED (.push) TO
  
     d3.json('./static/net_interests.json').then((well) => { //READ IN .json CONTAINING PARTNER'S WELL AND INTEREST INFO
         well.forEach((interest) => { //LOOP THROUGH  ROW OF DATA (interest)
-            if (values.includes(interest[3])) { //IF THE PARTNER SELECTION (values) HAS THE NAME OF THE PARTNER LOCATED AT INDEX 3, THEN..
-                wellOptions.push(interest[1]) //TTHAT WELL IS PUSHED TO wellOptions
+            if (values.includes(interest[3])) { //IF THE PARTNER SELECTED (values) HAS THE NAME OF THE PARTNER LOCATED AT INDEX 3, THEN..
+                wellOptions.push(interest[1]) //THAT WELL NAME IS PUSHED TO wellOptions (LIST CONTAINING ALL THE WELLS PARTNER IS IN) NEED THIS TO DISPLAY ALL WELLS FOR USER
             }
         }) //CLOSE interest LOOP
         wellOptions.forEach((well) => { //LOOP THROUGH THE ARRAY COINTAINING PARTNER'S WELLS
@@ -45,47 +45,61 @@ function createWellOptions() {
         
 
          //CODE TO UPDATE CURVES STARTS HERE
-         var wellsPartnerIn = Array.from(document.getElementById("well-options").options).map(e => e.value); //CREATE A LIST FROM THE WELLS POPULATED WHEN PARTNER IS SELECTED
-         
-         //console.log(wellsPartnerIn);
          well.forEach((partner) =>{ //LOOP TROUGH INTEREST DATA TO GET THE INTEREST FOR EACH WELL THE PARTNER IS IN
-            if (wellsPartnerIn.includes(partner[1]) && values.includes(partner[3])) { //IF THE LIST OF WELLS THE PARTNER IS IN AND THE PARTNERS NAME ARE BOTH IN THE ROW OF WELL DATE (partner)
-                wellPartnerInterest.push(partner[4]) //THE INTEREST IN THAT ROW IS PUSHED TO THE LIST CONTAINING ALL INTERETS FOR THAT PARTNER
-            }
+            if (wellOptions.includes(partner[1]) && values.includes(partner[3])) { //IF THE LIST OF WELLS THE PARTNER IS IN AND THE PARTNERS NAME ARE BOTH IN THE ROW OF WELL DATE (partner)
+            wellPartnerInterest.push(partner[4]) //THE INTEREST IN THAT ROW IS PUSHED TO THE LIST CONTAINING ALL INTERETS FOR THAT PARTNER
         }
-    );
-    wellsPartnerIn.forEach((key, i) => partnersWellAndInterest[key]= wellPartnerInterest[i]) //FOR EACH WELL PARTNER IS IN, MAKE THE WELL A KEY (for partnersWellAndInterest dict) AND THE INTEREST (from wellPartnerInterest) AS A VALUE
-    //console.log(partnersWellAndInterest.hasOwnProperty(wellsPartnerIn[0]));
-    //partnersWellAndInterest[wellsPartnerIn[0]] = partnersWellAndInterest.hasOwnProperty(wellsPartnerIn[0])
-    console.log(partnersWellAndInterest[wellsPartnerIn[0]]) //THIS RETURNS THE INTEREST OWN FOR THE FIRST KEY IN DICT. NEED TO LOOP DICT
+    }
+);
 
+    wellOptions.forEach((key, i) => partnersWellAndInterest[key]= wellPartnerInterest[i]) //KEY:VALUES = WELL NAME:INTEREST OWNED
     
+/// THIS IS WHERE I NEED HELP //
+//interestOwned = array of interests owned w/o reference to well name
+
+// requestedOil = all well's daily oil summed 
+// Oil = daily prudction * interest owned // FOR EACH WELL PARTNER HAS INTEREST IN 
+// site_date = x, date for production
+
+
 
     d3.json("./static/all_production.json").then((productionData) =>{
         var requestedOil = []
         var requestedGas = []
-        var requestedDate = []
+        var site_date = []
 
         var Oil = {}
         var Gas = {}
         
         productionData.forEach((site) => {
             if (Object.keys(partnersWellAndInterest).includes(site[0])){
-                interestOwned = Object.values(partnersWellAndInterest);
+                interestOwned = Object.values(partnersWellAndInterest); //TURNS INTO AN ARRAY OBJECT
                 Oil[site[8]] = Oil.hasOwnProperty(site[8]) //IF OIL HAS KEY OF DATE
-                ? Oil[site[8]] * parseFloat(interestOwned) //DO THIS
-                : parseFloat(site[2]); //IF IT DOESNT, DO THIS
+                ? parseFloat(site[2]) * parseFloat(interestOwned) //DO THIS
+                : parseFloat(site[2]) * parseFloat(interestOwned);//IF IT DOESNT, DO THIS //works for Darla
 
                 //console.log("++++", Oil, site);
             }
-            //console.log(partnersWellAndInterest);
-            
+            else {
+                interestOwned2 = Object.entries(partnersWellAndInterest); //TURNS INTO AN ARRAY OBJECT
+            }
         })
+        interestOwned.forEach((i) => {console.log(i)}) //PRINT EACH INTEREST 
         console.log(partnersWellAndInterest)
         console.log("----", Oil);
         console.log(interestOwned);
-    })
+        console.log("WHAT IS THIS", interestOwned2);
+        console.log("partnersWellAndInterest", partnersWellAndInterest);
+        console.log(typeof interestOwned);
+        console.log(Object.getOwnPropertyNames(interestOwned))
+   
 
+    site_date = Object.keys(Oil);
+    requestedOil = site_date.map(date => Oil[date]);
+    requestedGas = site_date.map(date => Gas[date]);
+    console.log("Oil", requestedOil)
+
+})
     
 
 
