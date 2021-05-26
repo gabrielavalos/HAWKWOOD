@@ -133,9 +133,11 @@ function updateCurves(){
       console.log("----", Oil);
 
       site_date = Object.keys(Oil);
+      
       requestedOil = site_date.map(date => Oil[date]);
       requestedGas = site_date.map(date => Gas[date]);
       requestedWater = site_date.map(date => Water[date]);
+      
 
 
         //// CODE TO ADD PRODUCTION FROM SELECTED WELLS ////
