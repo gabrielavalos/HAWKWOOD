@@ -65,37 +65,55 @@ function netInterestPerWell(wellProduction, interest) {
         
         
 
-
-
-        
-        //console.log("BEFORE", requestedOil)
-       //requestedOil = dayNetInterest.map(netProductionOwned => netProductionOwned * 2) //need to ficure out how to add to requestedOil which is empty
-
-  //console.log("dayNetInterest", dayNetInterest)
- // console.log("requestedOil", requestedOil) 
     };
 
 production = new Array;
-wellsIn = ["WOMBAT 2H", ]; //, 
+wellsIn = ["RIDGEBACK 1H", "STINGRAY 2H", "WOMBAT 2H"]; //, "WOMBAT 2H"
 site_date = []
 requestedOil = {};
 
 console.log(requestedOil)
 
-interestList = [0.02116946]; //, 
+interestList = [1]; //, 
 
 interestList.forEach((interest) => //LOOPING THROUGH EACH INTEREST IN LIST TO PLUG IN PRODUCTION AND INTEREST FOR THAT WELL
 {d3.json("./static/all_production.json").then((data) =>{
     data.forEach((site) => {
         if(wellsIn.includes(site[0]))
-        {production.push(site[2]);
+        {production.push(site[0], site[2]);
         site_date.push(site[8]);
         };
     });
+    console.log("PRODUCTION", production);
     netInterestPerWell(production, interest); //THIS NEEDS TO TAKE ONLY AN INTEREST, NOT AN INTEREST LIST.
     console.log("requestedOil outside function", requestedOil) 
 });
 }
 );
 
+
+
+newData = []
+partnersInterest = {"RIDGEBACK 1H":0.02284001, "WOMBAT 2H":0.02116946, "STINGRAY 2H": 0.00623584}; // this will have an arbitrary number of entries
+netOwnedForWell = 0 // well production * partner's interest 
+netProductionForWell = [];
+allNetsAdded = [];
+site_date1 = []
+
+
+{d3.json("./static/all_production.json").then((data) =>{
+    //console.log(typeof data);
+    data.forEach((site) =>  {if(wellsIn.includes(site[0])){
+        newData.push(site);
+        site_date1.push(site[8])
+    }}
+    );
+    newData.forEach((x) => {if(partnersInterest.hasOwnProperty(x[0])){netProductionForWell = newData.map(x => x[2] * partnersInterest[x[0]])} //SITE[2]*DESIGNATED VALUE
+    //newData.forEach((x) => {if(partnersInterest.hasOwnProperty(x[0])){console.log(partnersInterest[x[0]])}}) this printed the interest for that well for every row of data
+    //.includes(Object.keys(partnersInterest))){console.log(x[8])}})
+});
+    console.log(netProductionForWell);
+    //console.log(newData);
+    console.log(Object.entries(partnersInterest))
+    })};
 
