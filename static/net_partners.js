@@ -53,55 +53,120 @@ function createWellOptions() {
 );
 
     wellOptions.forEach((key, i) => partnersWellAndInterest[key]= wellPartnerInterest[i]) //KEY:VALUES = WELL NAME:INTEREST OWNED
-    
-/// THIS IS WHERE I NEED HELP //
-//interestOwned = array of interests owned w/o reference to well name
-
-// requestedOil = all well's daily oil summed 
-// Oil = daily prudction * interest owned // FOR EACH WELL PARTNER HAS INTEREST IN 
-// site_date = x, date for production
+    console.log("partnersWellAndInterest", partnersWellAndInterest)
 
 
 
-    d3.json("./static/all_production.json").then((productionData) =>{
-        var requestedOil = []
-        var requestedGas = []
-        var site_date = []
 
-        var Oil = {}
-        var Gas = {}
+
+newData = []
+
+netOwnedForWell = 0 // well production * partner's interest 
+netProductionForWell = []; //CONTAINS NET PRODUCTION OWNED FOR EACH WELL
+allNetsAdded = [];
+all_dates = []
+
+x = wellOptions.length
+
+//production = [];
+//interest = [];
+
+
+
+{d3.json("./static/all_production.json").then((data) =>{
+    data.forEach((site) =>  {if(wellOptions.includes(site[0])){
+        newData.push(site);
+        all_dates.push(site[8])
         
-        productionData.forEach((site) => {
-            if (Object.keys(partnersWellAndInterest).includes(site[0])){
-                interestOwned = Object.values(partnersWellAndInterest); //TURNS INTO AN ARRAY OBJECT
-                Oil[site[8]] = Oil.hasOwnProperty(site[8]) //IF OIL HAS KEY OF DATE
-                ? parseFloat(site[2]) * parseFloat(interestOwned) //DO THIS
-                : parseFloat(site[2]) * parseFloat(interestOwned);//IF IT DOESNT, DO THIS //works for Darla
+    }}
+    );
+    //console.log(newData);
+    //FOR EACH POINT IN new_data, IF IT HAS THE WELL NAME FROM THE WELL LIST PARTNER IS IN THEN netProductionForWell EQUALS THE production * partnersInterest property name [WELL NAME][0], WHICH IS THE INTEREST FOR THAT WELL 
+    
+    newData.forEach((x) => {if(partnersWellAndInterest.hasOwnProperty(x[0])){netProductionForWell = newData.map(x => x[2] * partnersWellAndInterest[x[0]])} //SITE[2]*DESIGNATED INTEREST
+  
+  
+   //newData.forEach((x) => {if(partnersWellAndInterest.hasOwnProperty(x[0])){production.push(x[2]), interest.push(partnersWellAndInterest[x[0]])} // dividing designated interest and designated production into two arrays
 
-                //console.log("++++", Oil, site);
-            }
-            else {
-                interestOwned2 = Object.entries(partnersWellAndInterest); //TURNS INTO AN ARRAY OBJECT
-            }
-        })
-        interestOwned.forEach((i) => {console.log(i)}) //PRINT EACH INTEREST 
-        console.log(partnersWellAndInterest)
-        console.log("----", Oil);
-        console.log(interestOwned);
-        console.log("WHAT IS THIS", interestOwned2);
-        console.log("partnersWellAndInterest", partnersWellAndInterest);
-        console.log(typeof interestOwned);
-        console.log(Object.getOwnPropertyNames(interestOwned))
-   
-
-    site_date = Object.keys(Oil);
-    requestedOil = site_date.map(date => Oil[date]);
-    requestedGas = site_date.map(date => Gas[date]);
-    console.log("Oil", requestedOil)
-
-})
     
 
+
+    //console.log(x[2], partnersWellAndInterest[x[0]])
+     
+    //console.log("netProductionForWell", netProductionForWell);
+});
+//console.log(production);
+//console.log(interest);
+
+
+    //console.log("netProductionForWell", netProductionForWell);
+    //console.log(newData);
+    console.log(Object.entries(partnersWellAndInterest))
+    //console.log(x)
+
+    //SPLIT net_production INTO ARRAYS OF THE LENGTH OF wellsPartnerIn
+    var size = wellOptions.length; var arrayOfArrays = [];
+   // var size = wellsIn.length; var arrayOfArrays = [];
+    for (var i=0; i<netProductionForWell.length; i+=size) {
+         arrayOfArrays.push(netProductionForWell.slice(i,i+size));
+    }
+    //console.log(arrayOfArrays);
+    //REDUCE EACH ARRAY (REDUCE SUMS ALL VALUES IN AN ARRAY)
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    allNetsAdded = arrayOfArrays.map(x => x.reduce(reducer))
+    console.log(allNetsAdded);
+
+    //GET ALL UNIQUE DATES
+    var site_date = [...new Set(all_dates)];
+    //console.log(site_date);
+    
+    //})};
+
+    var mostRecentEntry = site_date[0]; //MOST RECENT DATE WITHOUT HOUR AS VARIABLE
+            console.log(mostRecentEntry);
+            var addingHours = "T00:00"; //HOURS TO ADD TO MOST RECENT DATE - NEEDED TO NORMALIZE FROM ORIGINAL 19 HOUR FORMAT
+            var nextYear = mostRecentEntry.concat(addingHours); //DATE AND HOUR AS SINGLE VARIABLE TO MAKE INTO DATE
+            var mostRecentDate = new Date(nextYear); //MAKE VARIABLE INTO DATE
+            var nextYearsDate = new Date(mostRecentDate.setFullYear(mostRecentDate.getFullYear() + 1)); //GET YEAR FROM MOST RECENT DATE AND ADD A YEAR
+            var nextYear= nextYearsDate.getFullYear() //GET NEXT YEARS DATE
+            var nextMonth= nextYearsDate.getMonth() + 1 // GET NEXTS YEARS MONTH, ADD ONE BECAUSE MONTHS ARE INDEXED AT 0
+            var nextDate= nextYearsDate.getDate() //GET NEXT YEARS DATE
+            nextYearGraph = `${nextYear}-${nextMonth}-${nextDate}`; // CREATE FULL DATE FOR NEXT YEAR IN RIGHT FORMAT FOR AXIS
+            console.log(`${nextYearGraph} is a year from the most recent production date. This is from curvesHome()`);
+  
+            var dataOil = [{
+                x: site_date,
+                y: allNetsAdded,
+                type: "line",
+                line:
+                    {color: "green"}}];
+            var layoutOil = {
+                title: "Oil BBL",
+                yaxis: {
+                    type: 'log',
+                    autorange: true},
+                xaxis: {
+                    autorange: false,
+                    range: [site_date[site_date.length-1], nextYearGraph]}};
+  
+            Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
+            // var dataGas = [{
+            //     x: site_date,
+            //     y: site_gas,
+            //     type: "line",
+            //     line:
+            //         {color: "red"}}];
+            // var layoutGas = {
+            //     title: "Gas BBL",
+            //     yaxis: {
+            //         type: 'log',
+            //         autorange: true},
+            //     xaxis: {
+            //         autorange: false,
+            //         range: [site_date[site_date.length-1], nextYearGraph]}};
+            // Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
+
+        })};
 
 })
         
@@ -121,99 +186,20 @@ function clearWellOptions(){ //FUNCTION TO CLEAR OUT WELL OPTIONS, USED WHEN PAR
 
  
 
-    // d3.json("./static/all_production.json").then((data) =>{
-    //     d3.json("./static/net_interests.json").then((interestData) => {
-    //         var requestedOil = [];
-    //         var requestedGas = [];
-    //         var site_date = [];
-            
-            
-    //         var Oil = {};
-    //         var Gas = {};
-    //         var interestOwned = 0
-            
-            
-//             interestData.forEach((partner) => { 
-//                 values.forEach((well) => {
-//                     if (values.includes(well[1])) { interestOwned = partner[4]}
-//                         Oil[site[8]] = Oil.hasOwnProperty(site[8])
-//                           ? Oil[site[8]] + parseFloat(site[2])
-//                           : parseFloat(site[2]);
-                          
-//                         Gas[site[8]] = Gas.hasOwnProperty(site[8])
-//                           ? Gas[site[8]] + parseFloat(site[3])
-//                           : parseFloat(site[3]);
-//                         Water[site[8]] = Water.hasOwnProperty(site[8])
-//                           ? Gas[site[8]] + parseFloat(site[4])
-//                           : parseFloat(site[4]);
-              
-//                         console.log("++++", Oil, site);
-//                       }
-//                     )
-              
-//                     console.log("----", Oil);
-              
-//                     site_date = Object.keys(Oil);
-//                     requestedOil = site_date.map(date => Oil[date]);
-//                     requestedGas = site_date.map(date => Gas[date]);
-//                     requestedWater = site_date.map(date => Water[date]);
+    
      
             
-//             var mostRecentEntry = summarySiteDate[0]; //MOST RECENT DATE WITHOUT HOUR AS VARIABLE
-//             console.log(mostRecentEntry);
-//             var addingHours = "T00:00"; //HOURS TO ADD TO MOST RECENT DATE - NEEDED TO NORMALIZE FROM ORIGINAL 19 HOUR FORMAT
-//             var nextYear = mostRecentEntry.concat(addingHours); //DATE AND HOUR AS SINGLE VARIABLE TO MAKE INTO DATE
-//             var mostRecentDate = new Date(nextYear); //MAKE VARIABLE INTO DATE
-//             var nextYearsDate = new Date(mostRecentDate.setFullYear(mostRecentDate.getFullYear() + 1)); //GET YEAR FROM MOST RECENT DATE AND ADD A YEAR
-//             var nextYear= nextYearsDate.getFullYear() //GET NEXT YEARS DATE
-//             var nextMonth= nextYearsDate.getMonth() + 1 // GET NEXTS YEARS MONTH, ADD ONE BECAUSE MONTHS ARE INDEXED AT 0
-//             var nextDate= nextYearsDate.getDate() //GET NEXT YEARS DATE
-//             nextYearGraph = `${nextYear}-${nextMonth}-${nextDate}`; // CREATE FULL DATE FOR NEXT YEAR IN RIGHT FORMAT FOR AXIS
-//             console.log(`${nextYearGraph} is a year from the most recent production date. This is from curvesHome()`);
+            
   
-//             var dataOil = [{
-//                 x: summarySiteDate,
-//                 y: site_oil,
-//                 type: "line",
-//                 line:
-//                     {color: "green"}}];
-//             var layoutOil = {
-//                 title: "Oil BBL",
-//                 yaxis: {
-//                     type: 'log',
-//                     autorange: true},
-//                 xaxis: {
-//                     autorange: false,
-//                     range: [summarySiteDate[summarySiteDate.length-1], nextYearGraph]}};
   
-//             Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
-//             var dataGas = [{
-//                 x: summarySiteDate,
-//                 y: site_gas,
-//                 type: "line",
-//                 line:
-//                     {color: "red"}}];
-//             var layoutGas = {
-//                 title: "Gas BBL",
-//                 yaxis: {
-//                     type: 'log',
-//                     autorange: true},
-//                 xaxis: {
-//                     autorange: false,
-//                     range: [summarySiteDate[summarySiteDate.length-1], nextYearGraph]}};
-//             Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
-  
-//         })
-//     })
-// };
 
 function clearCurves(){ //MAKE THIS INTO DISAPPEARING THE CURVES?
     var site_oil = [];
     var site_gas = [];
-    summarySiteDate = [];
+    site_date = [];
     
     var dataOil = [{
-        x: summarySiteDate,
+        x: site_date,
         y: site_oil,
         type: "line",
         line:
@@ -225,17 +211,17 @@ function clearCurves(){ //MAKE THIS INTO DISAPPEARING THE CURVES?
         Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
 
 
-    var dataGas = [{
-        x: summarySiteDate,            
-        y: site_gas,
-        type: "line",
-        line:
-            {color: "red"}}];
-    var layoutGas = {
-        title: "Gas BBL",
-        yaxis: {
-            type: 'log'}};
-    Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
+    // var dataGas = [{
+    //     x: site_date,            
+    //     y: site_gas,
+    //     type: "line",
+    //     line:
+    //         {color: "red"}}];
+    // var layoutGas = {
+    //     title: "Gas BBL",
+    //     yaxis: {
+    //         type: 'log'}};
+    // Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
 };
 
 
