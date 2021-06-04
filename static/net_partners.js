@@ -19,7 +19,7 @@ createPartnerOptions() //CALL FUNCTION TO CREATE PARTNER'S NAME AS SOON AS THE P
 function createWellOptions() {
     var wellSelector = d3.select("#well-options"); //SELECT THE "well-options" <select>
     wellPartnerInterest = []; //PARTNER'S INTERESTS
-    var interestOwned = 0; //THIS IS WHAT EACH DAY PRODUCTION POINT WILL BE MULTIPLIED BY
+   
 
     var partnersWellAndInterest = {} //WILL CONTAIN THE WELL(S) AND CORRESPONDING INTERESTS FOR THE SELECTED PARTNER
     
@@ -59,62 +59,70 @@ function createWellOptions() {
 
 
 
-newData = []
+newData = [] //PRODUCTION DATA ONLY RELEVANT TO SELECTED PARTNER
 
-netOwnedForWell = 0 // well production * partner's interest 
-netProductionForWell = []; //CONTAINS NET PRODUCTION OWNED FOR EACH WELL
-allNetsAdded = [];
+
+netOilProductionForWell = []; //CONTAINS EACH WELLS DAILY OIL NET PRODUCTION OWNED 
+allOilNetsAdded = []; //COINTAINS DAILY OIL SUM 
+
+netGasProductionForWell = []; //CONTAINS EACH WELLS DAILY GAS NET PRODUCTION OWNED 
+allGasNetsAdded = []; //COINTAINS DAILY GAS SUM 
+
 all_dates = []
 
-x = wellOptions.length
+
 
 //production = [];
 //interest = [];
 
 
-
+//CREATING PRODUCTION DATA SET RELEVANT TO SELECTED PARTNER (COINTAINS DATA ONLY FOR THE WELLS THEY ARE IN)
 {d3.json("./static/all_production.json").then((data) =>{
     data.forEach((site) =>  {if(wellOptions.includes(site[0])){
         newData.push(site);
         all_dates.push(site[8])
-        
     }}
     );
-    //console.log(newData);
-    //FOR EACH POINT IN new_data, IF IT HAS THE WELL NAME FROM THE WELL LIST PARTNER IS IN THEN netProductionForWell EQUALS THE production * partnersInterest property name [WELL NAME][0], WHICH IS THE INTEREST FOR THAT WELL 
-    
-    newData.forEach((x) => {if(partnersWellAndInterest.hasOwnProperty(x[0])){netProductionForWell = newData.map(x => x[2] * partnersWellAndInterest[x[0]])} //SITE[2]*DESIGNATED INTEREST
+    //console.log(newData); //CHECK THAT ONLY THEIR RELEVANT DATA IS BEING STORED IN newData
+
+    //FOR EACH POINT IN new_data, x[0] HAS THE WELL NAME FROM  partnersWellAndInterest (THE OBJECT CONTAINING wellName:wellInterest), THEN netOilProductionForWell = THE production  x[2] * partnersInterest[x[0]] (property name [WELL NAME][0]), WHICH IS THE INTEREST FOR THAT WELL 
+    newData.forEach((x) => {if(partnersWellAndInterest.hasOwnProperty(x[0])){netOilProductionForWell = newData.map(x => x[2] * partnersWellAndInterest[x[0]]);
+                                                                            netGasProductionForWell = newData.map(x => x[3] * partnersWellAndInterest[x[0]])} //SITE[2]*DESIGNATED INTEREST
   
-  
+  //USE THIS TO CHECK WHAT DAILY PRODUCTION IS MULTIPLIED BY WHAT INTEREST 
    //newData.forEach((x) => {if(partnersWellAndInterest.hasOwnProperty(x[0])){production.push(x[2]), interest.push(partnersWellAndInterest[x[0]])} // dividing designated interest and designated production into two arrays
 
     
-
-
     //console.log(x[2], partnersWellAndInterest[x[0]])
      
-    //console.log("netProductionForWell", netProductionForWell);
+    
 });
 //console.log(production);
 //console.log(interest);
 
-
-    //console.log("netProductionForWell", netProductionForWell);
+//console.log("netGasProductionForWell", netGasProductionForWell);
+    //console.log("netOilProductionForWell", netOilProductionForWell);
     //console.log(newData);
-    console.log(Object.entries(partnersWellAndInterest))
+    //console.log(Object.entries(partnersWellAndInterest))
+  
     //console.log(x)
 
-    //SPLIT net_production INTO ARRAYS OF THE LENGTH OF wellsPartnerIn
-    var size = wellOptions.length; var arrayOfArrays = [];
-   // var size = wellsIn.length; var arrayOfArrays = [];
-    for (var i=0; i<netProductionForWell.length; i+=size) {
-         arrayOfArrays.push(netProductionForWell.slice(i,i+size));
+    //SPLIT netOilProductionForWell INTO ARRAYS OF THE LENGTH OF wellOptions (WELLS PARTNER IS IN)
+    var size = wellOptions.length; var arrayOfOilArrays = []; var arrayOfGasArrays = [];
+
+    for (var i=0; i<netOilProductionForWell.length; i+=size) {
+         arrayOfOilArrays.push(netOilProductionForWell.slice(i,i+size));
     }
+//SPLIT netGasProductionForWell INTO ARRAYS OF THE LENGTH OF wellOptions (WELLS PARTNER IS IN)
+    for (var i=0; i<netGasProductionForWell.length; i+=size) {
+        arrayOfGasArrays.push(netGasProductionForWell.slice(i,i+size));
+   }
     //console.log(arrayOfArrays);
     //REDUCE EACH ARRAY (REDUCE SUMS ALL VALUES IN AN ARRAY)
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    allNetsAdded = arrayOfArrays.map(x => x.reduce(reducer))
-    console.log(allNetsAdded);
+    allOilNetsAdded = arrayOfOilArrays.map(x => x.reduce(reducer))
+    allGasNetsAdded = arrayOfGasArrays.map(x => x.reduce(reducer))
+    //console.log(allNetsAdded);
 
     //GET ALL UNIQUE DATES
     var site_date = [...new Set(all_dates)];
@@ -136,13 +144,14 @@ x = wellOptions.length
   
             var dataOil = [{
                 x: site_date,
-                y: allNetsAdded,
+                y: allOilNetsAdded,
                 type: "line",
                 line:
                     {color: "green"}}];
             var layoutOil = {
                 title: "Oil BBL",
                 yaxis: {
+                    title: "BOPD Net",
                     type: 'log',
                     autorange: true},
                 xaxis: {
@@ -150,21 +159,22 @@ x = wellOptions.length
                     range: [site_date[site_date.length-1], nextYearGraph]}};
   
             Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
-            // var dataGas = [{
-            //     x: site_date,
-            //     y: site_gas,
-            //     type: "line",
-            //     line:
-            //         {color: "red"}}];
-            // var layoutGas = {
-            //     title: "Gas BBL",
-            //     yaxis: {
-            //         type: 'log',
-            //         autorange: true},
-            //     xaxis: {
-            //         autorange: false,
-            //         range: [site_date[site_date.length-1], nextYearGraph]}};
-            // Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
+            var dataGas = [{
+                x: site_date,
+                y: allGasNetsAdded,
+                type: "line",
+                line:
+                    {color: "red"}}];
+            var layoutGas = {
+                title: "Gas BBL",
+                yaxis: {
+                    title: "MCFD Net",
+                    type: 'log',
+                    autorange: true},
+                xaxis: {
+                    autorange: false,
+                    range: [site_date[site_date.length-1], nextYearGraph]}};
+            Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
 
         })};
 
