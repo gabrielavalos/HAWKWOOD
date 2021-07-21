@@ -192,17 +192,6 @@ function clearWellOptions(){ //FUNCTION TO CLEAR OUT WELL OPTIONS, USED WHEN PAR
     document.getElementById("well-options").options.length = 0
  };
 
-
-
- 
-
-    
-     
-            
-            
-  
-  
-
 function clearCurves(){ //MAKE THIS INTO DISAPPEARING THE CURVES?
     var site_oil = [];
     var site_gas = [];
@@ -221,17 +210,17 @@ function clearCurves(){ //MAKE THIS INTO DISAPPEARING THE CURVES?
         Plotly.newPlot("oilDeclineCurve", dataOil, layoutOil);
 
 
-    // var dataGas = [{
-    //     x: site_date,            
-    //     y: site_gas,
-    //     type: "line",
-    //     line:
-    //         {color: "red"}}];
-    // var layoutGas = {
-    //     title: "Gas BBL",
-    //     yaxis: {
-    //         type: 'log'}};
-    // Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
+    var dataGas = [{
+        x: site_date,            
+        y: site_gas,
+        type: "line",
+        line:
+            {color: "red"}}];
+    var layoutGas = {
+        title: "Gas BBL",
+        yaxis: {
+            type: 'log'}};
+    Plotly.newPlot("gasDeclineCurve", dataGas, layoutGas);
 };
 
 
