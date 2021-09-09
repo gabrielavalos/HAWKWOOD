@@ -10,7 +10,7 @@ function createPartnerOptions() {
             .text(partner)
             .property('Value', partner);
         })
-        document.getElementById("partner-name").size = partnerOptions.length //SELECT PARTER <select> AND MAKE IT THE SIZE OF THE LENGTH OF THE PARTNER'S LIST
+        //document.getElementById("partner-name").size = partnerOptions.length //SELECT PARTER <select> AND MAKE IT THE SIZE OF THE LENGTH OF THE PARTNER'S LIST
     })
 }; //END OF createOptions() 
 
